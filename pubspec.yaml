@@ -1,0 +1,74 @@
+name: postprob
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+  flutter_screenutil: ^5.9.3
+  oktoast: ^3.3.2
+  shared_preferences: ^2.2.3
+  provider: ^6.1.2
+  image_picker: ^1.0.4
+  image_cropper: ^5.0.0
+  dotted_border: ^2.1.0
+  file_picker: ^8.0.4
+  intl: ^0.19.0
+  http: ^1.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+    - assets/flag/
+
+  # example:
+  fonts:
+    - family: DMSans-Bold
+      fonts:
+        - asset: assets/fonts/DMSans-Bold.ttf
+
+    - family: DMSans-Black
+      fonts:
+        - asset: assets/fonts/DMSans-Black.ttf
+
+    - family: DMSans-Regular
+      fonts:
+        - asset: assets/fonts/DMSans-Regular.ttf
+
+    - family: DMSans-Medium
+      fonts:
+        - asset: assets/fonts/DMSans-Medium.ttf
+
+    - family: DMSans-Light
+      fonts:
+        - asset: assets/fonts/DMSans-Light.ttf
+
+    - family: DMSans-SemiBold
+      fonts:
+        - asset: assets/fonts/DMSans-SemiBold.ttf
+
+    - family: DMSans-Thin
+      fonts:
+        - asset: assets/fonts/DMSans-Thin.ttf
+
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages

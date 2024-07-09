@@ -1,19 +1,10 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/module/add_project/providers/add__post_provider.dart';
+import 'package:postprob/module/profile/models/list_data_model.dart';
 
 class ChooseProblemTypeSheet {
-  final List<String> typeOfJob = [
-    "Full time",
-    "Part time",
-    "Contract",
-    "Temporary",
-    "Volunteer",
-    "Apprenticeship",
-  ];
-  String selectedValue = "";
-
-  Future<String?> show(BuildContext context) async {
-    return await showModalBottomSheet<String>(
+  Future<ListDataModel?> show(BuildContext context, AddPostProvider postProvider) async {
+    return await showModalBottomSheet<ListDataModel>(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
@@ -22,7 +13,10 @@ class ChooseProblemTypeSheet {
         return StatefulBuilder(
           builder: (context, setState) {
             return Container(
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -33,7 +27,10 @@ class ChooseProblemTypeSheet {
                   Column(
                     children: [
                       SizedBox(
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
                       ),
                       Container(
                         width: 30.w,
@@ -72,16 +69,14 @@ class ChooseProblemTypeSheet {
                         removeRight: true,
                         context: context,
                         child: ListView.builder(
-                          itemCount: typeOfJob.length,
+                          itemCount: postProvider.employmentType.length,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
-                                setState(() {
-                                  selectedValue = typeOfJob[index];
-                                });
-                                Navigator.pop(context, typeOfJob[index]);
+                                postProvider.employmentUpdate(postProvider.employmentType[index].id.toString(),postProvider.employmentType[index].title.toString());
+                                Navigator.pop(context, postProvider.employmentType[index]);
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 25.h),
@@ -89,7 +84,7 @@ class ChooseProblemTypeSheet {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      typeOfJob[index],
+                                      postProvider.employmentType[index].title.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: smallTextCl,
@@ -100,7 +95,7 @@ class ChooseProblemTypeSheet {
                                       ),
                                     ),
                                     Image.asset(
-                                      selectedValue == typeOfJob[index] ? circleSelectIc : circleDefultIc,
+                                      postProvider.employmentTypeId == postProvider.employmentType[index].id.toString() ? circleSelectIc : circleDefultIc,
                                       height: 18.h,
                                       width: 18.w,
                                     )

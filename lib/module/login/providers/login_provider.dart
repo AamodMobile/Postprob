@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:postprob/constants/constants.dart';
-import 'package:postprob/core/common_widgets/route_animation.dart';
 import 'package:postprob/module/dashboard/view/dashboard_view.dart';
 import 'package:postprob/module/login/model/user_model.dart';
 import 'package:postprob/services/api_logs.dart';
@@ -13,6 +12,7 @@ class LoginProvider extends ChangeNotifier {
   String passwordV = "";
   TextEditingController password = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  bool isHide = true;
 
   void reset() {
     password.clear();
@@ -28,6 +28,11 @@ class LoginProvider extends ChangeNotifier {
 
   void passwordUpdate(String passwordT) {
     password.text = passwordT;
+    notifyListeners();
+  }
+
+  void isShow(bool show) {
+    isHide = show;
     notifyListeners();
   }
 
@@ -52,23 +57,32 @@ class LoginProvider extends ChangeNotifier {
       var result = await ApiService.loginApi(emailController.text, password.text);
       var json = jsonDecode(result.body);
       final apiResponse = UserModel.fromJson(json);
-      if (json["status"] == true) {
-        closeProgress(context);
-        var pref = await SharedPreferences.getInstance();
-        await pref.setString(
-          'currentUser',
-          jsonEncode(apiResponse.toJson()),
-        );
-        await pref.setString('currentToken', apiResponse.accessToken.toString());
-        Navigator.pushAndRemoveUntil(context, createRightToLeftRoute(const DashboardView()), (route) => false);
-        successToast(context, json["message"]);
-      } else {
-        closeProgress(context);
-        errorToast(context, json["message"]);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          closeProgress(context);
+          var pref = await SharedPreferences.getInstance();
+          await pref.setString(
+            'currentUser',
+            jsonEncode(apiResponse.toJson()),
+          );
+          await pref.setString('currentToken', apiResponse.accessToken.toString());
+          Navigator.pushAndRemoveUntil(
+              context,
+              createRightToLeftRoute(const DashboardView(
+                index: 0,
+              )),
+              (route) => false);
+          successToast(context, json["message"]);
+        } else {
+          closeProgress(context);
+          errorToast(context, json["message"]);
+        }
       }
     } catch (e) {
-      closeProgress(context);
-      Log.console(e.toString());
+      if (context.mounted) {
+        closeProgress(context);
+        Log.console(e.toString());
+      }
     }
   }
 }

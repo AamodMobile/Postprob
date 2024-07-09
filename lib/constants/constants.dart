@@ -6,3 +6,5 @@ export 'package:flutter/services.dart';
 export 'package:flutter/material.dart';
 export 'util.dart';
 export 'package:postprob/core/common_widgets/route_animation.dart';
+export 'package:flutter_screenutil/flutter_screenutil.dart';
+export 'package:provider/provider.dart';

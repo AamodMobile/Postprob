@@ -3,7 +3,7 @@ class UserModel {
   String? accessToken;
   String? tokenType;
   String? message;
-  Data? dataUser;
+  User? dataUser;
 
   UserModel({this.status, this.accessToken, this.tokenType, this.message});
 
@@ -12,7 +12,7 @@ class UserModel {
     accessToken = json['access_token'];
     tokenType = json['token_type'];
     message = json['message'];
-    dataUser = json['data'] != null ? Data.fromJson(json["data"]) : null;
+    dataUser = json['data'] != null ? User.fromJson(json["data"]) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -26,24 +26,36 @@ class UserModel {
   }
 }
 
-class Data {
+class User {
   int? id;
   String? name;
   String? email;
   String? isVendor;
+  String? mobile;
+  String? gender;
+  String? dob;
+  String? image;
 
-  Data({
+  User({
     this.id,
     this.name,
     this.email,
     this.isVendor,
+    this.mobile,
+    this.gender,
+    this.dob,
+    this.image,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
-        name: json["name"],
-        email: json["email"],
-        isVendor: json["is_vendor"],
+        name: json["name"] ?? "",
+        email: json["email"] ?? "",
+        isVendor: json["is_vendor"] ?? "",
+        mobile: json["mobile"] ?? "",
+        gender: json["gender"] ?? "",
+        dob: json["dob"] ?? "",
+        image: json["image"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -51,5 +63,9 @@ class Data {
         "name": name,
         "email": email,
         "is_vendor": isVendor,
+        "mobile": mobile,
+        "gender": gender,
+        "dob": dob,
+        "image": image,
       };
 }

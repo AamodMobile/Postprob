@@ -3,6 +3,7 @@ class ApiUrl {
   static const String imageUrl = "http://meraroom.in/jobspot/public/";
   static const String login = "${baseUrl}auth/login";
   static const String register = "${baseUrl}auth/register";
+  static const String logout = "${baseUrl}logout";
   static const String home = "${baseUrl}home";
   static const String language = "${baseUrl}language";
   static const String workplace = "${baseUrl}workplace";
@@ -10,5 +11,26 @@ class ApiUrl {
   static const String category = "${baseUrl}category";
   static const String educationLevel = "${baseUrl}education-lavel";
   static const String languageLevel = "${baseUrl}language-lavel";
-
+  static const String addUserExperience = "${baseUrl}user/experience";
+  static const String addUserEducation = "${baseUrl}user/education";
+  static const String addUserDocuments = "${baseUrl}user/documents";
+  static const String addUserLanguage = "${baseUrl}user/language";
+  static const String profileUpdate = "${baseUrl}user/profile";
+  static const String changePassword = "${baseUrl}change-password";
+  static const String manageNotification = "${baseUrl}manage-notification";
+  static const String userGetProfile = "${baseUrl}user/get-profile";
+  static const String deleteUserDocument = "${baseUrl}delete-user-document";
+  static const String deleteUserLanguage = "${baseUrl}delete-user-language";
+  static const String postList = "${baseUrl}post/list";
+  static const String postDetail = "${baseUrl}post/detail";
+  static const String jobApply = "${baseUrl}job/apply";
+  static const String savePost = "${baseUrl}save-post";
+  static const String removeSavedPost = "${baseUrl}remove-saved-post";
+  static const String savedPostsList = "${baseUrl}saved-posts-list";
+  static const String employmentType = "${baseUrl}employment_type";
+  static const String cities = "${baseUrl}cities";
+  static const String postCreate = "${baseUrl}post/create";
+  static const String appliedJobsList = "${baseUrl}applied_jobs";
+  static const String appliedJobDetail = "${baseUrl}applied_job/detail";
+  static const String myPosts = "${baseUrl}my-posts";
 }

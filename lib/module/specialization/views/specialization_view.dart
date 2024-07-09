@@ -1,6 +1,6 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_input_fields.dart';
+import 'package:postprob/module/add_project/views/add_post_view.dart';
 import 'package:postprob/module/add_project/widgets/add_post_sheet.dart';
 
 class SpecializationView extends StatefulWidget {
@@ -211,8 +211,8 @@ class _SpecializationViewState extends State<SpecializationView> {
                         ),
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
-                            onTap: (){
-                              AddPostSheet.show(context);
+                            onTap: () {
+                              AddPostSheet.show(context, () => {Navigator.push(context, createRightToLeftRoute(const AddPostView(id: '',)))});
                             },
                             child: Container(
                               padding: EdgeInsets.all(15.w),

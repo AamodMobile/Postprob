@@ -1,4 +1,3 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_input_fields.dart';
 
@@ -111,18 +110,18 @@ class _JobPositionSearchViewState extends State<JobPositionSearchView> {
                 ),
                 leading1: search.text.isNotEmpty
                     ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      search.clear();
-                      filterSearchResults('');
-                    });
-                  },
-                  child: Image.asset(
-                    removeIc,
-                    height: 24.h,
-                    width: 24.w,
-                  ),
-                )
+                        onTap: () {
+                          setState(() {
+                            search.clear();
+                            filterSearchResults('');
+                          });
+                        },
+                        child: Image.asset(
+                          removeIc,
+                          height: 24.h,
+                          width: 24.w,
+                        ),
+                      )
                     : const SizedBox(),
               ),
               SizedBox(height: 40.h),
@@ -132,7 +131,7 @@ class _JobPositionSearchViewState extends State<JobPositionSearchView> {
                   itemCount: searchList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pop(context, searchList[index]);
                       },
                       child: Container(

@@ -1,10 +1,8 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
-import 'package:postprob/module/login/view/login_view.dart';
 
 class RemoveItemSheet {
-  static show(BuildContext context,String title,String dec) async {
+  static show(BuildContext context, String title, String dec, Function() function) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -30,7 +28,7 @@ class RemoveItemSheet {
                       Container(
                         width: 30.w,
                         height: 3.h,
-                        decoration: BoxDecoration(color: Color(0xFF5B5858), borderRadius: BorderRadius.circular(3.dm)),
+                        decoration: BoxDecoration(color: const Color(0xFF5B5858), borderRadius: BorderRadius.circular(3.dm)),
                       ),
                       SizedBox(height: 50.h),
                       Text(
@@ -60,10 +58,8 @@ class RemoveItemSheet {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         child: CustomButtonWidget(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          text: "Continue Filling".toUpperCase(),
+                          onPressed: function,
+                          text: "Continue".toUpperCase(),
                         ),
                       ),
                       SizedBox(height: 10.h),
@@ -72,7 +68,6 @@ class RemoveItemSheet {
                         child: CustomButtonWidget(
                           style: CustomButtonStyle.style2,
                           onPressed: () {
-                            Navigator.pop(context);
                             Navigator.pop(context);
                           },
                           text: "Undo Changes".toUpperCase(),

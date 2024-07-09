@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_input_fields.dart';
 import 'package:postprob/module/profile/models/list_data_model.dart';
 import 'package:postprob/module/profile/providers/profile_provider.dart';
-import 'package:provider/provider.dart';
 
 class LevelOfEducation extends StatefulWidget {
   const LevelOfEducation({super.key});
@@ -24,7 +21,6 @@ class _LevelOfEducationState extends State<LevelOfEducation> {
     profileProvider.getEducationLevelList(context);
     super.initState();
   }
-
 
   void filterSearchResults(String query) {
     List<ListDataModel> dummySearchList = [];
@@ -107,18 +103,18 @@ class _LevelOfEducationState extends State<LevelOfEducation> {
                 ),
                 leading1: search.text.isNotEmpty
                     ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      search.clear();
-                      filterSearchResults('');
-                    });
-                  },
-                  child: Image.asset(
-                    removeIc,
-                    height: 24.h,
-                    width: 24.w,
-                  ),
-                )
+                        onTap: () {
+                          setState(() {
+                            search.clear();
+                            filterSearchResults('');
+                          });
+                        },
+                        child: Image.asset(
+                          removeIc,
+                          height: 24.h,
+                          width: 24.w,
+                        ),
+                      )
                     : const SizedBox(),
               ),
               SizedBox(height: 40.h),
@@ -128,7 +124,7 @@ class _LevelOfEducationState extends State<LevelOfEducation> {
                   itemCount: searchList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pop(context, searchList[index]);
                       },
                       child: Container(

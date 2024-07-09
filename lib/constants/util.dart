@@ -1,3 +1,4 @@
+import 'package:lottie/lottie.dart';
 import 'package:postprob/constants/constants.dart';
 
 void showToast(BuildContext context, String msg, Color bgColor, Color textColor) {
@@ -48,22 +49,27 @@ void showProgress(BuildContext context) {
   showDialog(
     context: context,
     barrierDismissible: false,
+    barrierColor: Colors.white.withOpacity(0.35),
     builder: (BuildContext context) {
       return WillPopScope(
         onWillPop: () async {
           return false;
         },
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: primaryLightCl.withOpacity(0.25),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(color: Colors.white),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 200.h,width: 200.w,
+              padding:  EdgeInsets.all(50.h),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Lottie.asset(loadingJson,height: 200.h,width: 200.w,fit: BoxFit.fill),
+              ),
+            ),
+          ],
         ),
       );
     },

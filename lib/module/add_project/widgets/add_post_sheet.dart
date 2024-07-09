@@ -1,11 +1,8 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
-import 'package:postprob/core/common_widgets/route_animation.dart';
-import 'package:postprob/module/add_project/views/add_post_view.dart';
 
 class AddPostSheet {
-  static show(BuildContext context) async {
+  static show(BuildContext context, Function() post) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -61,9 +58,7 @@ class AddPostSheet {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         child: CustomButtonWidget(
-                          onPressed: () {
-                            Navigator.push(context, createRightToLeftRoute(const AddPostView()));
-                          },
+                          onPressed: post,
                           text: "Post".toUpperCase(),
                         ),
                       ),

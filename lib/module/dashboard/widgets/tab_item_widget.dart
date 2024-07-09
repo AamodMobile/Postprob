@@ -1,4 +1,3 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/dashboard/providers/dashboard_provider.dart';
 
@@ -24,26 +23,33 @@ class _TabItemWidgetState extends State<TabItemWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          widget.index==2?const SizedBox():SizedBox(height: 2.h,),
-          widget.index==2?
-              Container(
-                height: 40.h,
-                width: 40.w,
-                decoration: const BoxDecoration(
-                  color: mainColor,
-                  shape: BoxShape.circle
+          widget.index == 2
+              ? const SizedBox()
+              : SizedBox(
+                  height: 2.h,
                 ),
-                child: const Center(child: Icon(Icons.add,color: Colors.white,)),
-              ):
-          Image.asset(
-            widget.iconPath,
-            width: 28,
-            height: 28,
-            color:  widget.state.baseActiveBottomIndex == widget.index
-                    ? yellowDark
-                    : unselectedIconCl,
-          ),
-          widget.index==2? SizedBox(height: 7.h,):const SizedBox(),
+          widget.index == 2
+              ? Container(
+                  height: 40.h,
+                  width: 40.w,
+                  decoration: const BoxDecoration(color: mainColor, shape: BoxShape.circle),
+                  child: const Center(
+                      child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  )),
+                )
+              : Image.asset(
+                  widget.iconPath,
+                  width: 28,
+                  height: 28,
+                  color: widget.state.baseActiveBottomIndex == widget.index ? yellowDark : unselectedIconCl,
+                ),
+          widget.index == 2
+              ? SizedBox(
+                  height: 7.h,
+                )
+              : const SizedBox(),
         ],
       ),
     );

@@ -1,12 +1,8 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
-import 'package:postprob/module/login/view/login_view.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LogoutSheet {
-  static show(BuildContext context) async {
+  static show(BuildContext context, Function() function) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -32,7 +28,7 @@ class LogoutSheet {
                       Container(
                         width: 30.w,
                         height: 3.h,
-                        decoration: BoxDecoration(color: Color(0xFF5B5858), borderRadius: BorderRadius.circular(3.dm)),
+                        decoration: BoxDecoration(color: const Color(0xFF5B5858), borderRadius: BorderRadius.circular(3.dm)),
                       ),
                       SizedBox(height: 50.h),
                       Text(
@@ -62,11 +58,7 @@ class LogoutSheet {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         child: CustomButtonWidget(
-                          onPressed: () async {
-                            SharedPreferences preferences = await SharedPreferences.getInstance();
-                             preferences.clear();
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginView()), (route) => false);
-                          },
+                          onPressed: function,
                           text: "Yes".toUpperCase(),
                         ),
                       ),

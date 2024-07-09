@@ -1,13 +1,10 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
 import 'package:postprob/core/common_widgets/custom_check_box.dart';
 import 'package:postprob/core/common_widgets/custom_input_fields.dart';
-import 'package:postprob/core/common_widgets/route_animation.dart';
 import 'package:postprob/module/forgot_password/view/forgot_password.dart';
 import 'package:postprob/module/login/providers/login_provider.dart';
 import 'package:postprob/module/sign_up/view/sign_up_view.dart';
-import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -92,6 +89,7 @@ class _LoginViewState extends State<LoginView> {
                       labelText: "Password",
                       hintText: "Password",
                       fillColor: Colors.white,
+                      obscureText: state.isHide,
                       validator: (v) {
                         if (v!.isEmpty) {
                           return "enter password";
@@ -101,10 +99,19 @@ class _LoginViewState extends State<LoginView> {
                       onChanged: (v) {
                         state.passwordUpdate(v);
                       },
-                      leading1: Image.asset(
-                        iconEyeHideIc,
-                        height: 24.h,
-                        width: 24.w,
+                      leading1: GestureDetector(
+                        onTap: () {
+                          if (state.isHide) {
+                            state.isShow(false);
+                          } else {
+                            state.isShow(true);
+                          }
+                        },
+                        child: Image.asset(
+                          state.isHide ?phEyeIc: iconEyeHideIc  ,
+                          height: 24.h,
+                          width: 24.w,
+                        ),
                       ),
                     ),
                     SizedBox(

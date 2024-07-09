@@ -1,17 +1,21 @@
-import 'package:flutter/material.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/dashboard/providers/dashboard_provider.dart';
 import 'package:postprob/module/dashboard/widgets/bottom_nav_bar.dart';
-import 'package:provider/provider.dart';
 
 class DashboardView extends StatefulWidget {
-  const DashboardView({super.key});
+  final int index;
+  const DashboardView({super.key, required this.index});
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  @override
+  void initState() {
+    Provider.of<DashboardProvider>(context, listen: false).navigateToFirstIndex(widget.index);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Consumer<DashboardProvider>(builder: (context, state, child) {

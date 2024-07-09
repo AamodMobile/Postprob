@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:postprob/constants/constants.dart';
-import 'package:postprob/core/common_widgets/route_animation.dart';
 import 'package:postprob/module/dashboard/view/dashboard_view.dart';
 import 'package:postprob/module/intro/view/intro_view.dart';
 import 'package:postprob/module/login/model/user_model.dart';
@@ -47,7 +46,7 @@ class _SplashViewState extends State<SplashView> {
           UserModel crtUser = UserModel.fromJson(jsonDecode(crtData));
           Navigator.pushAndRemoveUntil(
             context,
-            createBottomToTopRoute(const DashboardView(), 4),
+            createBottomToTopRoute(const DashboardView(index: 0,), 4),
             (route) => false,
           );
         } else {

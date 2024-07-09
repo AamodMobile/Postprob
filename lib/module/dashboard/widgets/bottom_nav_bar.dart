@@ -1,8 +1,6 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/dashboard/providers/dashboard_provider.dart';
 import 'package:postprob/module/dashboard/widgets/tab_item_widget.dart';
-import 'package:provider/provider.dart';
 
 class CommonBottomNavBar extends StatelessWidget {
   const CommonBottomNavBar({super.key});

@@ -1,4 +1,4 @@
-package com.postprob.postprob
+package com.postprob
 
 import io.flutter.embedding.android.FlutterActivity
 

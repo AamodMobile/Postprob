@@ -1,14 +1,21 @@
 import 'dart:io';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/module/add_project/providers/add__post_provider.dart';
+import 'package:postprob/module/connection/providers/connection_provider.dart';
 import 'package:postprob/module/dashboard/providers/dashboard_provider.dart';
+import 'package:postprob/module/edit_profile/providers/edit_profile_provider.dart';
+import 'package:postprob/module/home/providers/home_provider.dart';
 import 'package:postprob/module/login/providers/login_provider.dart';
 import 'package:postprob/module/profile/providers/profile_provider.dart';
+import 'package:postprob/module/save/providers/save_providers.dart';
+import 'package:postprob/module/settings/providers/setting_provider.dart';
 import 'package:postprob/module/sign_up/providers/sign_up_provider.dart';
 import 'package:postprob/module/splash/view/splash_view.dart';
-import 'package:provider/provider.dart';
+import 'package:postprob/module/your_post_application/providers/post_application_provider.dart';
+
+import 'module/your_application/providers/applied_job_provider.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -34,6 +41,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => SignUpProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => SettingProvider()),
+        ChangeNotifierProvider(create: (_) => EditProfileProvider()),
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => ConnectionProvider()),
+        ChangeNotifierProvider(create: (_) => SavePostProvider()),
+        ChangeNotifierProvider(create: (_) => AddPostProvider()),
+        ChangeNotifierProvider(create: (_) => AppliedJobProvider()),
+        ChangeNotifierProvider(create: (_) => PostApplicationProvider()),
       ],
       child: GestureDetector(
         onTap: () {

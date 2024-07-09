@@ -1,16 +1,10 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/module/add_project/models/cities_model.dart';
+import 'package:postprob/module/add_project/providers/add__post_provider.dart';
 
 class ProblemLocationSheet {
-  final List<String> location = [
-    "Califon, United States",
-    "California, United States",
-    "California City, United States",
-  ];
-  String selectedValue = "";
-
-  Future<String?> show(BuildContext context) async {
-    return await showModalBottomSheet<String>(
+  Future<CitiesModel?> show(BuildContext context, AddPostProvider postProvider) async {
+    return await showModalBottomSheet<CitiesModel>(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
@@ -28,7 +22,6 @@ class ProblemLocationSheet {
               child: Wrap(
                 children: [
                   Column(
-
                     children: [
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -70,35 +63,34 @@ class ProblemLocationSheet {
                         removeRight: true,
                         context: context,
                         child: ListView.builder(
-                          itemCount: location.length,
+                          itemCount: postProvider.cityList.length,
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
-                                setState(() {
-                                  selectedValue = location[index];
-                                });
-                                Navigator.pop(context, location[index]);
+                                postProvider.locationUpdate(postProvider.cityList[index].id.toString(), postProvider.cityList[index].title.toString());
+                                Navigator.pop(context, postProvider.cityList[index]);
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 25.h),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      location[index],
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: smallTextCl,
-                                        fontFamily: regular,
-                                        fontSize: 14.sp,
-                                        fontStyle: FontStyle.normal,
-                                        fontWeight: FontWeight.w400,
+                                    Expanded(
+                                      child: Text(
+                                        postProvider.cityList[index].title.toString(),
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          color: smallTextCl,
+                                          fontFamily: regular,
+                                          fontSize: 14.sp,
+                                          fontStyle: FontStyle.normal,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ),
                                     Image.asset(
-                                      selectedValue == location[index] ? circleSelectIc : circleDefultIc,
+                                      postProvider.locationId == postProvider.cityList[index].id.toString() ? circleSelectIc : circleDefultIc,
                                       height: 18.h,
                                       width: 18.w,
                                     )
@@ -109,7 +101,7 @@ class ProblemLocationSheet {
                           },
                         ),
                       ),
-                      SizedBox(height: 30.h),
+                      SizedBox(height: 20.h),
                     ],
                   ),
                 ],

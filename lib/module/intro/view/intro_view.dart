@@ -1,6 +1,4 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
-import 'package:postprob/core/common_widgets/route_animation.dart';
 import 'package:postprob/module/login/view/login_view.dart';
 
 class IntroView extends StatefulWidget {

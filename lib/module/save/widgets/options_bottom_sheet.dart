@@ -1,11 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
-import 'package:postprob/module/your_application/views/your_application_view.dart';
+import 'package:postprob/module/connection/views/post_details_view.dart';
 
 class OptionsSheet {
-  static show(BuildContext context) async {
+  static show(
+    BuildContext context,
+    String id,
+    Function() delete,
+  ) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -31,7 +32,7 @@ class OptionsSheet {
                       Container(
                         width: 30.w,
                         height: 3.h,
-                        decoration: BoxDecoration(color: Color(0xFF5B5858), borderRadius: BorderRadius.circular(3.dm)),
+                        decoration: BoxDecoration(color: const Color(0xFF5B5858), borderRadius: BorderRadius.circular(3.dm)),
                       ),
                       SizedBox(height: 50.h),
                       Padding(
@@ -84,41 +85,45 @@ class OptionsSheet {
                         ),
                       ),
                       SizedBox(height: 25.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              deleteIc,
-                              height: 24.h,
-                              width: 24.w,
-                            ),
-                            SizedBox(width: 15.w),
-                            Text(
-                              "Delete",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: mediumTextCl,
-                                fontFamily: medium,
-                                fontSize: 14.sp,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w400,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          delete();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.w),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                deleteIc,
+                                height: 24.h,
+                                width: 24.w,
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 15.w),
+                              Text(
+                                "Delete",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: mediumTextCl,
+                                  fontFamily: medium,
+                                  fontSize: 14.sp,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: 12.h),
                       GestureDetector(
-                        onTap: (){
-
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(context, createRightToLeftRoute(PostDetailsView(postId: id)));
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15.w,vertical: 13.h),
-                          decoration: BoxDecoration(
-                            color: mainColor,
-                            borderRadius: BorderRadius.circular(6)
-                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 13.h),
+                          decoration: BoxDecoration(color: mainColor, borderRadius: BorderRadius.circular(6)),
                           child: Row(
                             children: [
                               Image.asset(

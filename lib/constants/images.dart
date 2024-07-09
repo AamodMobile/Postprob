@@ -2,6 +2,7 @@
 const appLogo = "assets/icons/logo_app.png";
 const arrowForwardIc = "assets/icons/arrow_forward_ic.png";
 const iconEyeHideIc = "assets/icons/icon_eye_hide.png";
+const phEyeIc = "assets/icons/ph_eye.png";
 const googleIc = "assets/icons/google_ic.png";
 const homeIc = "assets/icons/home_ic.png";
 const connectionIc = "assets/icons/connection_ic.png";
@@ -50,6 +51,9 @@ const watchIc = "assets/icons/watch_ic.png";
 const playIc = "assets/icons/play_ic.png";
 const cameraIc = "assets/icons/camera_ic.png";
 const galleryIc = "assets/icons/gallery_ic.png";
+const loadingGif = "assets/icons/loading.gif";
+const loadingSecGif = "assets/icons/loading_sec.gif";
+const bookmarkFillIc = "assets/icons/bookmark_fill_ic.png";
 
 
 //images
@@ -77,3 +81,6 @@ const italianFlag = "assets/flag/italian_flg.png";
 const japaneseFlag = "assets/flag/japanese_flag.png";
 const koreanFlag = "assets/flag/korean_flg.png";
 const malaysianFlag = "assets/flag/malaysian_flag.png";
+
+//lottie
+const loadingJson = "assets/lottie/loading.json";

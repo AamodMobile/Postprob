@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_input_fields.dart';
@@ -172,7 +171,9 @@ class _MessageViewState extends State<MessageView> {
                     width: 50.w,
                     padding: const EdgeInsets.all(0),
                     decoration: const BoxDecoration(color: Color(0xFFD6CDFE), shape: BoxShape.circle),
-                    child: Image.asset(demoUser),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25.dm),
+                      child:Image.asset(demoUser),)
                   ),
                   SizedBox(width: 11.w),
                   Expanded(

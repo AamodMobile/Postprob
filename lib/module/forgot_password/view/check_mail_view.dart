@@ -1,3 +1,5 @@
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
 import 'package:postprob/module/forgot_password/view/successfully_update.dart';
@@ -10,7 +12,24 @@ class CheckMailView extends StatefulWidget {
   State<CheckMailView> createState() => _CheckMailViewState();
 }
 
-class _CheckMailViewState extends State<CheckMailView> {
+class _CheckMailViewState extends LifecycleAwareState<CheckMailView> {
+  Future<void> _openGmailApp() async {
+    const intent = AndroidIntent(
+      action: 'android.intent.action.MAIN',
+      category: 'android.intent.category.APP_EMAIL',
+      package: 'com.google.android.gm',
+      flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
+    );
+    await intent.launch();
+    setShouldHandleResume(true);
+  }
+
+  @override
+  void onAppResume() {
+    // Navigate to the next screen
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const SuccessFullyUpdateView()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -62,14 +81,13 @@ class _CheckMailViewState extends State<CheckMailView> {
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.03),
                 child: CustomButtonWidget(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const SuccessFullyUpdateView()));
+                    _openGmailApp();
+                    // Navigator.push(context, MaterialPageRoute(builder: (_) => const SuccessFullyUpdateView()));
                   },
                   text: "Open Your Email",
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.030,
-              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.030),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.03),
                 child: CustomButtonWidget(
@@ -119,5 +137,36 @@ class _CheckMailViewState extends State<CheckMailView> {
         ),
       ),
     );
+  }
+}
+
+abstract class LifecycleAwareState<T extends StatefulWidget> extends State<T> with WidgetsBindingObserver {
+  bool _shouldHandleResume = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _shouldHandleResume) {
+      onAppResume();
+    }
+  }
+
+  void onAppResume();
+
+  void setShouldHandleResume(bool value) {
+    setState(() {
+      _shouldHandleResume = value;
+    });
   }
 }

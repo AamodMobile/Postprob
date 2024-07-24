@@ -119,11 +119,7 @@ class _PostApplicationListViewState extends State<PostApplicationListView> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    createRightToLeftRoute(PostApplicationView(
-                                      postJobsListModel: state.postJobsList[index],
-                                    )));
+                                Navigator.push(context, createRightToLeftRoute(PostApplicationView(id: state.postJobsList[index].id.toString())));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 15.h),
@@ -163,11 +159,11 @@ class _PostApplicationListViewState extends State<PostApplicationListView> {
                                                             appleIc,
                                                             height: 40.h,
                                                             width: 40.w,
-                                                         fit: BoxFit.cover,
+                                                            fit: BoxFit.cover,
                                                           ),
                                                           height: 40.h,
                                                           width: 40.w,
-                                                       fit: BoxFit.cover,
+                                                          fit: BoxFit.cover,
                                                           imageUrl: ApiUrl.imageUrl + state.postJobsList[index].user!.image.toString(),
                                                           placeholder: (a, b) => const Center(
                                                             child: CircularProgressIndicator(),

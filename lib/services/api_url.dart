@@ -33,4 +33,9 @@ class ApiUrl {
   static const String appliedJobsList = "${baseUrl}applied_jobs";
   static const String appliedJobDetail = "${baseUrl}applied_job/detail";
   static const String myPosts = "${baseUrl}my-posts";
+  static const String myPostDetail = "${baseUrl}my-post-detail";
+  static const String forgetPassword = "${baseUrl}auth/forget-password";
+  static const String chatList = "${baseUrl}chat-list";
+  static const String getMessages = "${baseUrl}get-messages";
+  static const String sendMessage = "${baseUrl}send-message";
 }

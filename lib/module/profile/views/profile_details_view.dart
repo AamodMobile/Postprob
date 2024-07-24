@@ -106,7 +106,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  state.profileModel.cityId ?? "",
+                                  state.profileModel.cityState??"",
                                   textAlign: TextAlign.start,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,

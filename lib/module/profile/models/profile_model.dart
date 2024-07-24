@@ -7,12 +7,15 @@ class ProfileModel {
   String? mobile;
   String? gender;
   String? dob;
-  String? cityId;
+  dynamic cityId;
+  String? state;
+  String? city;
   List<ListDataModel>? skills;
   String? aboutMe;
   String? image;
   String? isVendor;
   int? isNotification;
+  String? cityState;
   Experience? experience;
   Education? education;
   List<Document>? documents;
@@ -26,11 +29,14 @@ class ProfileModel {
     this.gender,
     this.dob,
     this.cityId,
+    this.state,
+    this.city,
     this.skills,
     this.aboutMe,
     this.image,
     this.isVendor,
     this.isNotification,
+    this.cityState,
     this.experience,
     this.education,
     this.documents,
@@ -44,12 +50,15 @@ class ProfileModel {
         mobile: json["mobile"] ?? "",
         gender: json["gender"] ?? "",
         dob: json["dob"] ?? "",
-        cityId: json["city_id"]??"",
+        cityId: json["city_id"] ?? "",
+        state: json["state"] ?? "",
+        city: json["city"] ?? "",
         skills: json["skills"] == null ? [] : List<ListDataModel>.from(json["skills"]!.map((x) => ListDataModel.fromJson(x))),
         aboutMe: json["about_me"] ?? "",
         image: json["image"] ?? "",
         isVendor: json["is_vendor"] ?? "",
         isNotification: json["is_notification"] ?? 0,
+        cityState: json["citystate"] ?? "",
         experience: json["experience"] == null ? null : Experience.fromJson(json["experience"]),
         education: json["education"] == null ? null : Education.fromJson(json["education"]),
         documents: json["documents"] == null ? [] : List<Document>.from(json["documents"]!.map((x) => Document.fromJson(x))),
@@ -64,11 +73,14 @@ class ProfileModel {
         "gender": gender,
         "dob": dob,
         "city_id": cityId,
+        "state": state,
+        "city": city,
         "skills": skills == null ? [] : List<dynamic>.from(skills!.map((x) => x.toJson())),
         "about_me": aboutMe,
         "image": image,
         "is_vendor": isVendor,
         "is_notification": isNotification,
+        "citystate": cityState,
         "experience": experience?.toJson(),
         "education": education?.toJson(),
         "documents": documents == null ? [] : List<dynamic>.from(documents!.map((x) => x.toJson())),
@@ -239,5 +251,3 @@ class LanguageElement {
         "is_primary": isPrimary,
       };
 }
-
-

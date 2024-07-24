@@ -37,8 +37,8 @@ Route createRightToLeftRoute(Widget page) {
         child: child,
       );
     },
-    transitionDuration: const Duration(seconds: 1),
-    reverseTransitionDuration: const Duration(seconds: 1),
+    transitionDuration: const Duration(milliseconds: 500),
+    reverseTransitionDuration: const Duration(milliseconds: 500),
   );
 }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/your_application/models/applied_jobs_model.dart';
+import 'package:postprob/module/your_post_application/models/my_post_job_details_model.dart';
 import 'package:postprob/module/your_post_application/models/post_jobs_model.dart';
 import 'package:postprob/services/api_logs.dart';
 import 'package:postprob/services/api_service.dart';
@@ -11,7 +12,7 @@ class PostApplicationProvider extends ChangeNotifier{
   var postJobsList = <PostJobsListModel>[];
   bool isLoading = false;
   bool noData = false;
-  var postJobDetails = PostJobsListModel();
+  var myPostDetails = MyPostJobDetailsModel();
 
   Future<void> getPostJobsList(BuildContext context) async {
     try {
@@ -40,14 +41,14 @@ class PostApplicationProvider extends ChangeNotifier{
   Future<void> getPostJobDetail(BuildContext context, String appliedJobId) async {
     try {
       isLoading = true;
-      var result = await ApiService.appliedJobDetail(appliedJobId);
+      var result = await ApiService.myPostDetail(appliedJobId);
       var json = jsonDecode(result.body);
       if (context.mounted) {
         if (json["status"] == true) {
           await Future.delayed(const Duration(seconds: 3)).then((value) {
             isLoading = false;
             noData = false;
-            postJobDetails = PostJobsListModel.fromJson(json["data"]);
+            myPostDetails = MyPostJobDetailsModel.fromJson(json["data"]);
           });
         } else {
           isLoading = false;

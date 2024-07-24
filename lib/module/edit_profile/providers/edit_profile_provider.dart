@@ -15,7 +15,9 @@ class EditProfileProvider extends ChangeNotifier {
   TextEditingController phone = TextEditingController();
   String gender = "";
   String image = "";
+  String state = "";
   String city = "";
+  String cityState = "";
   FocusNode phoneF = FocusNode();
   File profileImage = File("");
 

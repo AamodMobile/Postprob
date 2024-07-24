@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/module/add_project/models/cities_model.dart';
 import 'package:postprob/module/dashboard/view/dashboard_view.dart';
 import 'package:postprob/module/login/model/user_model.dart';
 import 'package:postprob/services/api_logs.dart';
@@ -20,6 +21,10 @@ class SignUpProvider extends ChangeNotifier {
   Position? _currentPosition;
   var pincode = "";
   var city = "";
+  var cityId = "";
+  var state = "";
+  var cityModel;
+  var cityList = <CitiesModel>[];
 
   void reset() {
     password.clear();
@@ -28,6 +33,14 @@ class SignUpProvider extends ChangeNotifier {
     passwordV = "";
     mobileNo = "";
     nameV = "";
+    cityId = "";
+    cityModel = null;
+  }
+
+  void cityUpdate(CitiesModel citiesModel, String id) {
+    cityModel = citiesModel;
+    cityId = id;
+    notifyListeners();
   }
 
   void emailUpdate(String email) {
@@ -60,10 +73,29 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> registerApiCall(BuildContext context) async {
+  Future<void> getCities(BuildContext context) async {
+    try {
+      cityModel = null;
+      cityList.clear();
+      var result = await ApiService.cities();
+      var json = jsonDecode(result.body);
+      if (json["status"] == true) {
+        cityList = List<CitiesModel>.from(json['data'].map((i) => CitiesModel.fromJson(i))).toList(growable: true);
+      } else {
+        if (context.mounted) {
+          //errorToast(context, json["status"].toString());
+        }
+      }
+    } catch (e) {
+      Log.console(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> registerApiCall(BuildContext context, String state, String city) async {
     try {
       showProgress(context);
-      var result = await ApiService.register(name.text, emailController.text, password.text);
+      var result = await ApiService.register(name.text, emailController.text, password.text, state, city, cityId);
       var json = jsonDecode(result.body);
       final apiResponse = UserModel.fromJson(json);
       if (context.mounted) {
@@ -116,6 +148,7 @@ class SignUpProvider extends ChangeNotifier {
     try {
       await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position) {
         _currentPosition = position;
+
         _getAddressFromLatLng(_currentPosition!);
       }).catchError((e) {
         debugPrint("$e");
@@ -129,9 +162,12 @@ class SignUpProvider extends ChangeNotifier {
     try {
       await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
         Placemark place = placemarks[0];
+
         currentAddress = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}';
         pincode = '${place.postalCode}';
         city = '${place.locality}';
+        state = place.administrativeArea ?? '';
+        Log.console(state);
         notifyListeners();
       }).catchError((e) {
         debugPrint(e);

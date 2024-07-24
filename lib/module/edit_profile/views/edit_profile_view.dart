@@ -25,11 +25,13 @@ class _EditProfileViewState extends State<EditProfileView> {
       Provider.of<ProfileProvider>(context, listen: false).userGetProfile(context).then((_) {
         profileProvider = Provider.of<ProfileProvider>(context, listen: false);
         editProfileProvider.image = profileProvider.profileModel.image.toString();
-        editProfileProvider.city = profileProvider.profileModel.cityId.toString();
+        editProfileProvider.state = profileProvider.profileModel.state.toString();
+        editProfileProvider.city = profileProvider.profileModel.city.toString();
         editProfileProvider.name.text = profileProvider.profileModel.name.toString();
         editProfileProvider.email.text = profileProvider.profileModel.email.toString();
         editProfileProvider.phone.text = profileProvider.profileModel.mobile.toString();
         editProfileProvider.dob.text = profileProvider.profileModel.dob.toString();
+        editProfileProvider.cityState = profileProvider.profileModel.cityState.toString();
         editProfileProvider.setGender(profileProvider.profileModel.gender.toString());
       });
     });
@@ -80,10 +82,12 @@ class _EditProfileViewState extends State<EditProfileView> {
                                         ),
                                         height: 40.h,
                                         width: 40.w,
-                                     fit: BoxFit.cover,
+                                        fit: BoxFit.cover,
                                         imageUrl: ApiUrl.imageUrl + state.image.toString(),
                                         placeholder: (a, b) => const Center(
-                                          child: CircularProgressIndicator(),
+                                          child: CircularProgressIndicator(
+                                            color: mainColor,
+                                          ),
                                         ),
                                       )
                                     : Image.asset(
@@ -107,7 +111,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                                 ),
                               ),
                               Text(
-                                state.city,
+                                state.cityState,
                                 textAlign: TextAlign.start,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

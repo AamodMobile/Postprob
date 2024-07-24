@@ -1,10 +1,11 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/module/chat/models/message_list_model.dart';
 
 class ReceiverChatItem extends StatefulWidget {
-  final String msg;
+  final MessageListModel messageListModel;
 
-  const ReceiverChatItem({super.key, required this.msg});
+  const ReceiverChatItem({super.key, required this.messageListModel});
 
   @override
   State<ReceiverChatItem> createState() => _ReceiverChatItemState();
@@ -17,6 +18,7 @@ class _ReceiverChatItemState extends State<ReceiverChatItem> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: 35.h,
@@ -26,8 +28,9 @@ class _ReceiverChatItemState extends State<ReceiverChatItem> {
               child: Image.asset(demoUser),
             ),
             SizedBox(width: 10.w),
-            Expanded(
-              child: Container(
+            Flex(
+              direction: Axis.horizontal,
+              children: [Container(
                 margin: const EdgeInsets.only(right: 85),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -41,7 +44,7 @@ class _ReceiverChatItemState extends State<ReceiverChatItem> {
                       bottomRight: Radius.circular(10.dm),
                     )),
                 child: Text(
-                  widget.msg,
+                  widget.messageListModel.message.toString(),
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: blackCl,
@@ -51,7 +54,7 @@ class _ReceiverChatItemState extends State<ReceiverChatItem> {
                     fontSize: 14.sp,
                   ),
                 ),
-              ),
+              ),]
             ),
           ],
         ),
@@ -61,7 +64,7 @@ class _ReceiverChatItemState extends State<ReceiverChatItem> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 48.0),
           child: Text(
-            "09:30 am",
+            widget.messageListModel.time.toString(),
             style: TextStyle(
               color: hintColor,
               fontFamily: regular,

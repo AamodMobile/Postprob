@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:oktoast/oktoast.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/add_project/providers/add__post_provider.dart';
+import 'package:postprob/module/chat/providers/chat_list_provider.dart';
 import 'package:postprob/module/connection/providers/connection_provider.dart';
 import 'package:postprob/module/dashboard/providers/dashboard_provider.dart';
 import 'package:postprob/module/edit_profile/providers/edit_profile_provider.dart';
+import 'package:postprob/module/forgot_password/providers/forgot_password_provider.dart';
 import 'package:postprob/module/home/providers/home_provider.dart';
 import 'package:postprob/module/login/providers/login_provider.dart';
 import 'package:postprob/module/profile/providers/profile_provider.dart';
@@ -13,9 +15,8 @@ import 'package:postprob/module/save/providers/save_providers.dart';
 import 'package:postprob/module/settings/providers/setting_provider.dart';
 import 'package:postprob/module/sign_up/providers/sign_up_provider.dart';
 import 'package:postprob/module/splash/view/splash_view.dart';
+import 'package:postprob/module/your_application/providers/applied_job_provider.dart';
 import 'package:postprob/module/your_post_application/providers/post_application_provider.dart';
-
-import 'module/your_application/providers/applied_job_provider.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -25,6 +26,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
   HttpOverrides.global = MyHttpOverrides();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -49,6 +51,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddPostProvider()),
         ChangeNotifierProvider(create: (_) => AppliedJobProvider()),
         ChangeNotifierProvider(create: (_) => PostApplicationProvider()),
+        ChangeNotifierProvider(create: (_) => ForgotPasswordProvider()),
+        ChangeNotifierProvider(create: (_) => ChatListProvider()),
       ],
       child: GestureDetector(
         onTap: () {

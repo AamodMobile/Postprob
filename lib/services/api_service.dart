@@ -30,12 +30,18 @@ class ApiService {
     String name,
     String email,
     String password,
+    String state,
+    String city,
+    String cityId,
   ) async {
     http.Response response;
     var result = await ApiClient.postData(ApiUrl.register, body: {
       'name': name,
       'email': email,
       'password': password,
+      'state': state,
+      'city': city,
+      'city_id': cityId,
     });
     response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
     return response;
@@ -762,6 +768,91 @@ class ApiService {
         'Authorization': 'Bearer $token',
       },
       body: {},
+    );
+    response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
+    return response;
+  }
+
+  static Future<http.Response> forgetPassword(String email) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(
+      ApiUrl.forgetPassword,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      body: {"email": email},
+    );
+    response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
+    return response;
+  }
+
+  static Future<http.Response> chatList() async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(
+      ApiUrl.chatList,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      body: {},
+    );
+    response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
+    return response;
+  }
+
+  static Future<http.Response> myPostDetail(String postId) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(
+      ApiUrl.myPostDetail,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      body: {"post_id": postId},
+    );
+    response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
+    return response;
+  }
+
+  static Future<http.Response> getMessages(String recipientId) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(
+      ApiUrl.getMessages,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      body: {"recipient_id": recipientId},
+    );
+    response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
+    return response;
+  }
+
+  static Future<http.Response> sendMessage(
+    String message,
+    String recipientId,
+    String eventId,
+    String channelId,
+  ) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(
+      ApiUrl.sendMessage,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      body: {
+        "message": message,
+        "recipient_id": recipientId,
+        "event_id": eventId,
+        "channel_id": channelId,
+      },
     );
     response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
     return response;

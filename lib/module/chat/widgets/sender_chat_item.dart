@@ -1,11 +1,11 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/module/chat/models/message_list_model.dart';
 
 class SenderChatItem extends StatefulWidget {
-  final String msg;
+  final MessageListModel messageListModel;
   final bool file;
 
-  const SenderChatItem({super.key, required this.msg, required this.file});
+  const SenderChatItem({super.key, required this.messageListModel, required this.file});
 
   @override
   State<SenderChatItem> createState() => _SenderChatItemState();
@@ -48,7 +48,7 @@ class _SenderChatItemState extends State<SenderChatItem> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.msg,
+                            widget.messageListModel.message.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: medium,
@@ -81,7 +81,7 @@ class _SenderChatItemState extends State<SenderChatItem> {
                   ],
                 )
               : Text(
-                  widget.msg,
+                  widget.messageListModel.message.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: medium,
@@ -97,7 +97,7 @@ class _SenderChatItemState extends State<SenderChatItem> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              "09:30 am",
+              widget.messageListModel.time.toString(),
               style: TextStyle(
                 color: hintColor,
                 fontFamily: regular,

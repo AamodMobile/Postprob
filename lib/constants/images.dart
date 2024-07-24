@@ -54,7 +54,7 @@ const galleryIc = "assets/icons/gallery_ic.png";
 const loadingGif = "assets/icons/loading.gif";
 const loadingSecGif = "assets/icons/loading_sec.gif";
 const bookmarkFillIc = "assets/icons/bookmark_fill_ic.png";
-
+const arrowDropDown = "assets/icons/angle_down.png";
 
 //images
 const splash = "assets/images/splash.png";
@@ -63,6 +63,7 @@ const forgotPasswordImg = "assets/images/forgot_password_img.png";
 const undrawMessageSentImg = "assets/images/undraw_message_sent_img.png";
 const officeGirlImg = "assets/images/office_girl_img.png";
 const noSaveImg = "assets/images/no_save_img.png";
+const noMessage = "assets/images/no_message.png";
 const demoUser = "assets/images/demo_user.png";
 const successfullyApplyImg = "assets/images/successfully_apply_img.png";
 const noResultFoundImg = "assets/images/no_result_found_img.png";

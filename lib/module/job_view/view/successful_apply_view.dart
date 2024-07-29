@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
+import 'package:postprob/module/chat/views/message_view.dart';
 import 'package:postprob/module/connection/providers/connection_provider.dart';
 import 'package:postprob/module/dashboard/view/dashboard_view.dart';
 import 'package:postprob/services/api_url.dart';
@@ -118,7 +119,7 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
                                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                       child: Row(
                                         children: [
-                                          Expanded(
+                                          /* Expanded(
                                             child: Text(
                                               "Google",
                                               textAlign: TextAlign.center,
@@ -136,7 +137,7 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
                                             width: 7,
                                             margin: EdgeInsets.symmetric(horizontal: 10.w),
                                             decoration: const BoxDecoration(color: Color(0xFF0D0140), shape: BoxShape.circle),
-                                          ),
+                                          ),*/
                                           Expanded(
                                             child: Text(
                                               state.postDetailsModel.city!.title.toString(),
@@ -193,25 +194,25 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
                               ),
                               child: state.postDetailsModel.user!.image != ""
                                   ? Center(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(30.dm),
-                                  child: CachedNetworkImage(
-                                    errorWidget: (context, url, error) => Image.asset(
-                                      demoUser,
-                                      height: 60.h,
-                                      width: 60.w,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    height: 60.h,
-                                    width: 60.w,
-                                    fit: BoxFit.cover,
-                                    imageUrl: ApiUrl.imageUrl + state.postDetailsModel.user!.image.toString(),
-                                    placeholder: (a, b) => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                ),
-                              )
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(30.dm),
+                                        child: CachedNetworkImage(
+                                          errorWidget: (context, url, error) => Image.asset(
+                                            demoUser,
+                                            height: 60.h,
+                                            width: 60.w,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          height: 60.h,
+                                          width: 60.w,
+                                          fit: BoxFit.cover,
+                                          imageUrl: ApiUrl.imageUrl + state.postDetailsModel.user!.image.toString(),
+                                          placeholder: (a, b) => const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                      ),
+                                    )
                                   : Image.asset(googleIc),
                             ),
                           ),
@@ -243,7 +244,7 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                       state.successModel.resume.toString(),
+                                        state.successModel.resume.toString(),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           color: mediumTextCl,
@@ -255,7 +256,9 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
                                       ),
                                       SizedBox(height: 5.h),
                                       Text(
-                                        formatDate(state.successModel.createdAt.toString(),),
+                                        formatDate(
+                                          state.successModel.createdAt.toString(),
+                                        ),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           color: hintColor,
@@ -317,17 +320,24 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
                       children: [
                         CustomButtonWidget(
                           style: CustomButtonStyle.style2,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              createLeftToRightRoute(
+                                MessageView(
+                                  id: state.successModel.jobDetail!.user!.id.toString(),
+                                  user: state.successModel.jobDetail!.re!,
+                                  userId: state.successModel.userId.toString(),
+                                ),
+                              ),
+                            );
+                          },
                           text: "OPEN PERSON CHAT NOW",
                         ),
                         SizedBox(height: 20.h),
                         CustomButtonWidget(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                createLeftToRightRoute(const DashboardView(
-                                  index: 0,
-                                )));
+                            Navigator.pushReplacement(context, createLeftToRightRoute(const DashboardView(index: 0)));
                           },
                           text: "BACK TO HOME",
                         ),
@@ -343,6 +353,7 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
       },
     );
   }
+
   String formatDate(String dateString) {
     DateTime dateTime = DateTime.parse(dateString);
     DateFormat outputFormat = DateFormat('d MMM yyyy \'at\' h:mm a');

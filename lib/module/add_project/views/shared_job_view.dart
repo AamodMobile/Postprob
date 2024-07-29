@@ -3,6 +3,7 @@ import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
 import 'package:postprob/module/add_project/providers/add__post_provider.dart';
 import 'package:postprob/module/dashboard/view/dashboard_view.dart';
+import 'package:postprob/module/your_post_application/views/your_post_application_view.dart';
 import 'package:postprob/services/api_url.dart';
 
 class SharedJobView extends StatefulWidget {
@@ -111,7 +112,7 @@ class _SharedJobViewState extends State<SharedJobView> {
                                     ),
                                     height: 56.h,
                                     width: 56.w,
-                                 fit: BoxFit.cover,
+                                    fit: BoxFit.cover,
                                     imageUrl: ApiUrl.imageUrl + addPostState.successPostModel.user!.image.toString(),
                                     placeholder: (context, url) => const Center(
                                       child: CircularProgressIndicator(),
@@ -204,7 +205,26 @@ class _SharedJobViewState extends State<SharedJobView> {
                                         width: 40.w,
                                         padding: const EdgeInsets.all(7),
                                         decoration: const BoxDecoration(color: Color(0xFFC4C4C4), shape: BoxShape.circle),
-                                        child: Image.asset(appleIc),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(20.dm),
+                                          child: addPostState.successPostModel.files != null && addPostState.successPostModel.files!.isNotEmpty
+                                              ? CachedNetworkImage(
+                                                  errorWidget: (context, url, error) => Image.asset(
+                                                    videoDemoImg,
+                                                    height: 40.h,
+                                                    width: 40.w,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                            height: 40.h,
+                                            width: 40.w,
+                                                  fit: BoxFit.contain,
+                                                  imageUrl: ApiUrl.imageUrl + addPostState.successPostModel.files![0].file.toString(),
+                                                  placeholder: (a, b) => const Center(
+                                                    child: CircularProgressIndicator(),
+                                                  ),
+                                                )
+                                              : Image.asset(itTypeIc),
+                                        ),
                                       ),
                                       SizedBox(width: 16.w),
                                       Expanded(
@@ -253,23 +273,28 @@ class _SharedJobViewState extends State<SharedJobView> {
                                   ),
                                   Align(
                                     alignment: Alignment.center,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 20.w),
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        borderRadius: BorderRadius.circular(20.dm),
-                                        border: Border.all(
-                                          color: const Color(0xFF0D0140),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context, createLeftToRightRoute(PostApplicationView(id: addPostState.successPostModel.id.toString())));
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 20.w),
+                                        decoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          borderRadius: BorderRadius.circular(20.dm),
+                                          border: Border.all(
+                                            color: const Color(0xFF0D0140),
+                                          ),
                                         ),
-                                      ),
-                                      child: Text(
-                                        "Application details",
-                                        style: TextStyle(
-                                          color: const Color(0xFF0D0140),
-                                          fontFamily: regular,
-                                          fontSize: 12.sp,
-                                          fontStyle: FontStyle.normal,
-                                          fontWeight: FontWeight.w400,
+                                        child: Text(
+                                          "Application details",
+                                          style: TextStyle(
+                                            color: const Color(0xFF0D0140),
+                                            fontFamily: regular,
+                                            fontSize: 12.sp,
+                                            fontStyle: FontStyle.normal,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                       ),
                                     ),

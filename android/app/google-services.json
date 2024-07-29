@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "198265625239",
+    "project_id": "postprob-cdf0d",
+    "storage_bucket": "postprob-cdf0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198265625239:android:344fd21ed46052566867d2",
+        "android_client_info": {
+          "package_name": "com.postprob"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlMEwar-eaMAMtbwI4MjTeMaHE4aYIWFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

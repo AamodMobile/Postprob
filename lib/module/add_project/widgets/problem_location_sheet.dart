@@ -56,12 +56,8 @@ class ProblemLocationSheet {
                         ),
                       ),
                       SizedBox(height: 40.h),
-                      MediaQuery.removePadding(
-                        removeTop: true,
-                        removeBottom: true,
-                        removeLeft: true,
-                        removeRight: true,
-                        context: context,
+                      SizedBox(
+                       height: 300.h,
                         child: ListView.builder(
                           itemCount: postProvider.cityList.length,
                           shrinkWrap: true,

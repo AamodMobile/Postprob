@@ -1,9 +1,16 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/helper/notification_helper.dart';
+import 'package:postprob/helper/notification_listener_sevices.dart';
+import 'package:postprob/helper/notification_service.dart';
 import 'package:postprob/module/dashboard/providers/dashboard_provider.dart';
 import 'package:postprob/module/dashboard/widgets/bottom_nav_bar.dart';
+import 'package:postprob/services/api_logs.dart';
 
 class DashboardView extends StatefulWidget {
   final int index;
+
   const DashboardView({super.key, required this.index});
 
   @override
@@ -11,11 +18,49 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   @override
   void initState() {
-    Provider.of<DashboardProvider>(context, listen: false).navigateToFirstIndex(widget.index);
     super.initState();
+    Provider.of<DashboardProvider>(context, listen: false).navigateToFirstIndex(widget.index);
+    updateFcm();
+    NotificationListenerProvider().getMessage();
+    NotificationListenerProvider().getBackGroundMessage();
+    NotificationService.initialize(flutterLocalNotificationsPlugin);
+    NotificationHelper().initializeNotification();
+    FirebaseMessaging.instance.getInitialMessage().then(
+      (message) {
+        Log.console('FirebaseMessaging.instance.getInitialMessage');
+        if (message != null) {
+          Log.console('New Notification');
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessage.listen(
+      (message) {
+        Log.console('FirebaseMessaging.onMessage.listen');
+        if (message.notification != null) {
+          Log.console(message.notification!.title);
+          Log.console(message.notification!.body);
+          Log.console("message.data11 ${message.data}");
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (message) {
+        Log.console("FirebaseMessaging.onMessageOpenedApp.listen");
+        if (message.notification != null) {
+          Log.console(message.notification!.title);
+          Log.console(message.notification!.body);
+          Log.console("message.data22 ${message.data['_id']}");
+        }
+      },
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DashboardProvider>(builder: (context, state, child) {
@@ -65,5 +110,19 @@ class _DashboardViewState extends State<DashboardView> {
         ),
       );
     });
+  }
+
+  void updateFcm() async {
+    final dashboardProvider = context.read<DashboardProvider>();
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    firebaseMessaging.getToken().then(
+      (token) async {
+        if (token != null) {
+          var fcmToken = token.toString();
+          Log.console("fcm=$fcmToken");
+          dashboardProvider.updateFcmTokenApi(fcmToken, context);
+        }
+      },
+    );
   }
 }

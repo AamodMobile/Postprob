@@ -151,25 +151,30 @@ class _MyApplyApplicationListViewState extends State<MyApplyApplicationListView>
                                                 width: 40.w,
                                                 padding: const EdgeInsets.all(8),
                                                 decoration: const BoxDecoration(color: Color(0xFFD6CDFE), shape: BoxShape.circle),
-                                                child: state.appliedJobsList[index].jobDetail!.image != ""
-                                                    ? ClipRRect(
-                                                    borderRadius: BorderRadius.circular(20.dm),
-                                                    child:CachedNetworkImage(
-                                                        errorWidget: (context, url, error) => Image.asset(
-                                                          appleIc,
-                                                          height: 40.h,
-                                                          width: 40.w,
-                                                          fit: BoxFit.contain,
-                                                        ),
-                                                        height: 40.h,
-                                                        width: 40.w,
-                                                     fit: BoxFit.cover,
-                                                        imageUrl: ApiUrl.imageUrl + state.appliedJobsList[index].jobDetail!.image.toString(),
-                                                        placeholder: (a, b) => const Center(
-                                                          child: CircularProgressIndicator(),
-                                                        ),
-                                                      ),)
-                                                    : Image.asset(appleIc),
+                                                child:  ClipRRect(
+                                                  borderRadius: BorderRadius.circular(20.dm),
+                                                  child:   state.appliedJobsList[index].jobDetail!.files != null &&     state.appliedJobsList[index].jobDetail!.files!.isNotEmpty
+                                                      ? CachedNetworkImage(
+                                                    errorWidget: (context, url, error) => Image.asset(
+                                                      videoDemoImg,
+                                                      height: 40.h,
+                                                      width: 40.w,
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                    height: 40.h,
+                                                    width: 40.w,
+                                                    fit: BoxFit.contain,
+                                                    imageUrl: ApiUrl.imageUrl +   state.appliedJobsList[index].jobDetail!.files![0].file.toString(),
+                                                    placeholder: (a, b) => const Center(
+                                                      child: CircularProgressIndicator(),
+                                                    ),
+                                                  )
+                                                      : Image.asset(
+                                                    itTypeIc,
+                                                    height: 40.h,
+                                                    width: 40.w,
+                                                  ),
+                                                ),
                                               ),
                                               SizedBox(
                                                 height: 10.h,

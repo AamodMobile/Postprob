@@ -1,5 +1,6 @@
 import 'package:postprob/module/add_project/models/cities_model.dart';
 import 'package:postprob/module/chat/models/chat_list_model.dart';
+import 'package:postprob/module/connection/models/file_element_model.dart';
 import 'package:postprob/module/login/model/user_model.dart';
 
 class MyPostJobDetailsModel {
@@ -27,7 +28,7 @@ class MyPostJobDetailsModel {
   List<Recipient>? appliedUsers;
   CitiesModel? city;
   User? user;
-
+  List<FileElement>? files;
   MyPostJobDetailsModel({
     this.id,
     this.title,
@@ -52,7 +53,7 @@ class MyPostJobDetailsModel {
     this.postedAt,
     this.appliedUsers,
     this.city,
-    this.user,
+    this.user,    this.files,
   });
 
   factory MyPostJobDetailsModel.fromJson(Map<String, dynamic> json) => MyPostJobDetailsModel(
@@ -80,6 +81,7 @@ class MyPostJobDetailsModel {
         appliedUsers: json["applied_users"] == null ? [] : List<Recipient>.from(json["applied_users"]!.map((x) => Recipient.fromJson(x))),
         city: json["city"] == null ? null : CitiesModel.fromJson(json["city"]),
         user: json["user"] == null ? null : User.fromJson(json["user"]),
+    files: json["files"] == null ? [] : List<FileElement>.from(json["files"]!.map((x) => FileElement.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -107,6 +109,7 @@ class MyPostJobDetailsModel {
         "applied_users": appliedUsers == null ? [] : List<dynamic>.from(appliedUsers!.map((x) => x.toJson())),
         "city": city?.toJson(),
         "user": user?.toJson(),
+    "files": files == null ? [] : List<dynamic>.from(files!.map((x) => x.toJson())),
       };
 }
 

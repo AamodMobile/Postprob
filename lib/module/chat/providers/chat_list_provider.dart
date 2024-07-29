@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/chat/models/chat_list_model.dart';
@@ -18,13 +19,37 @@ class ChatListProvider extends ChangeNotifier {
   bool isChannelInitialized = false;
   String channelId = "";
   String eventId = "";
+  String isBlock = "";
+  String isMute = "";
   String otherUserId = "";
+  int currentPage = 0;
+  int totalPage = 0;
+  bool hasMore = false;
+  var files = [];
+  TextEditingController msg = TextEditingController();
+  File image = File("");
+
+  void setupScrollListener() {
+    scrollController.addListener(() {
+      if (hasMore) {
+        if (scrollController.offset <= scrollController.position.minScrollExtent && !scrollController.position.outOfRange) {
+          if (currentPage == totalPage) {
+          } else {
+            currentPage++;
+            notifyListeners();
+            getMessages(false, isFast: false);
+          }
+        }
+        if (scrollController.offset >= scrollController.position.maxScrollExtent && !scrollController.position.outOfRange) {}
+      }
+    });
+  }
 
   void initializePusher() async {
     pusher = PusherChannelsFlutter.getInstance();
     try {
       await pusher.init(
-        apiKey: "1dd42ee25cd6c4a2c6ba",
+        apiKey: "521f6611e9ba0643f298",
         cluster: "ap2",
         onConnectionStateChange: onConnectionStateChange,
         onError: onError,
@@ -99,8 +124,8 @@ class ChatListProvider extends ChangeNotifier {
       var newMessage = MessageListModel.fromJson(data["message"]);
       if (otherUserId == data["message"]["user_id"].toString()) {
         addMessage(newMessage);
+        scrollToBottom();
       }
-      scrollToBottom();
     } catch (e) {
       Log.console("Parsed data: $e");
     }
@@ -152,21 +177,33 @@ class ChatListProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getMessages(BuildContext context, String recipientId, bool load) async {
+  Future<void> getMessages(bool load, {bool? isFast}) async {
     try {
       isLoading = load;
-      var result = await ApiService.getMessages(recipientId);
+      var result = await ApiService.getMessages(otherUserId, currentPage.toString());
       var json = jsonDecode(result.body);
-      if (context.mounted) {
-        if (json["status"] == true) {
-          isLoading = false;
-          channelId = json["channel_id"];
-          eventId = json["event_id"];
-          messageList = List<MessageListModel>.from(json["data"].map((i) => MessageListModel.fromJson(i))).toList(growable: true);
-        } else {
-          isLoading = false;
-          errorToast(context, json["message"].toString());
+      if (json["status"] == true) {
+        isLoading = false;
+        channelId = json["channel_id"];
+        eventId = json["event_id"];
+        isMute = json["is_mute"].toString();
+        isBlock = json["is_block"].toString();
+        totalPage = int.parse(json["total_pages"].toString());
+        Log.console("totalPage$totalPage");
+        Log.console("totalPage$channelId");
+        Log.console("totalPage$eventId");
+        if (isFast != null) {
+          if (isFast) {
+            messageList.clear();
+            messageList.addAll(List<MessageListModel>.from(json["data"]["data"].map((i) => MessageListModel.fromJson(i))).toList(growable: true));
+            scrollToBottom();
+            hasMore = true;
+          } else {
+            messageList.insertAll(0, List<MessageListModel>.from(json["data"]["data"].map((i) => MessageListModel.fromJson(i))).toList(growable: true));
+          }
         }
+      } else {
+        isLoading = false;
       }
     } catch (e) {
       isLoading = false;
@@ -184,7 +221,7 @@ class ChatListProvider extends ChangeNotifier {
           "message": msg,
         };
         onTriggerEventPressed(jsonData);
-        getMessages(context, recipientId, false);
+        getMessages(false, isFast: true);
         chatListGet(context, false);
       } else {
         errorToast(context, "Error send msg");
@@ -195,12 +232,13 @@ class ChatListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendMessage(BuildContext context, String msg, String recipientId) async {
+  Future<void> sendMessage(BuildContext context, String message) async {
     try {
-      var result = await ApiService.sendMessage(msg, recipientId, eventId, channelId);
-      var json = jsonDecode(result.body);
+      var result = await ApiService.sendMessage(message, otherUserId, eventId, channelId, files);
       if (context.mounted) {
-        if (json["status"] == true) {
+        if (result["status"] == true) {
+          msg.text = "";
+          files.clear();
           /* final Map<String, dynamic> jsonData = {
             "user_id": json["data"]["user_id"],
             "recipient_id": json["data"]["recipient_id"],
@@ -209,14 +247,101 @@ class ChatListProvider extends ChangeNotifier {
             "updated_at": json["data"]["updated_at"],
             "id": json["data"]["id"],
           };*/
-          getMessages(context, recipientId, false);
+          getMessages(false, isFast: true);
+          scrollToBottom();
           chatListGet(context, false);
         } else {
-          errorToast(context, json["message"].toString());
+          errorToast(context, result["message"].toString());
         }
       }
     } catch (e) {
       Log.console(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> clearAllMessages(BuildContext context, String eventId) async {
+    try {
+      var result = await ApiService.clearAllMessages(eventId);
+      var json = jsonDecode(result.body);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          chatListGet(context, false);
+          messageList.clear();
+          //getMessages(false,isFast: true);
+        } else {
+          //errorToast(context, json["message"].toString());
+        }
+      }
+    } catch (e) {
+      Log.console(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> readAllMessages(BuildContext context, String eventId) async {
+    try {
+      var result = await ApiService.readAllMessages(eventId);
+      var json = jsonDecode(result.body);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          chatListGet(context, false);
+        } else {
+          //errorToast(context, json["message"].toString());
+        }
+      }
+    } catch (e) {
+      Log.console(e.toString());
+    }
+    notifyListeners();
+  }
+
+  Future<void> muteChat(BuildContext context, String isMute) async {
+    try {
+      showProgress(context);
+      var result = await ApiService.muteChat(channelId, otherUserId, isMute);
+      var json = jsonDecode(result.body);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          closeProgress(context);
+          successToast(context, json["message"].toString());
+          chatListGet(context, false);
+          getMessages(false, isFast: true);
+        } else {
+          closeProgress(context);
+          errorToast(context, json["message"].toString());
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        closeProgress(context);
+        Log.console(e.toString());
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> blockChat(BuildContext context, String isBlock) async {
+    try {
+      showProgress(context);
+      var result = await ApiService.blockChat(channelId, otherUserId, isBlock);
+      var json = jsonDecode(result.body);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          closeProgress(context);
+          successToast(context, json["message"].toString());
+          chatListGet(context, false);
+          getMessages(false, isFast: true);
+        } else {
+          closeProgress(context);
+          errorToast(context, json["message"].toString());
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        closeProgress(context);
+        Log.console(e.toString());
+      }
     }
     notifyListeners();
   }

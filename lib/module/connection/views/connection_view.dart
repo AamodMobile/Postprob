@@ -19,7 +19,7 @@ class _ConnectionViewState extends State<ConnectionView> {
   @override
   void initState() {
     connectionProvider = context.read<ConnectionProvider>();
-    connectionProvider.getPostList(context,true);
+    connectionProvider.getPostList(context, true);
     super.initState();
   }
 
@@ -109,24 +109,24 @@ class _ConnectionViewState extends State<ConnectionView> {
                                           children: [
                                             ClipRRect(
                                               borderRadius: BorderRadius.circular(25.dm),
-                                              child: state.connectionList[index].user!.image != ""
+                                              child: state.connectionList[index].files != null && state.connectionList[index].files!.isNotEmpty
                                                   ? CachedNetworkImage(
                                                       errorWidget: (context, url, error) => Image.asset(
-                                                        demoUser,
+                                                        videoDemoImg,
                                                         height: 50.h,
                                                         width: 50.w,
-                                                        fit: BoxFit.cover,
+                                                        fit: BoxFit.contain,
                                                       ),
                                                       height: 50.h,
                                                       width: 50.w,
-                                                   fit: BoxFit.cover,
-                                                      imageUrl: ApiUrl.imageUrl + state.connectionList[index].user!.image.toString(),
+                                                      fit: BoxFit.contain,
+                                                      imageUrl: ApiUrl.imageUrl + state.connectionList[index].files![0].file.toString(),
                                                       placeholder: (a, b) => const Center(
                                                         child: CircularProgressIndicator(),
                                                       ),
                                                     )
                                                   : Image.asset(
-                                                      demoUser,
+                                                      itTypeIc,
                                                       height: 50.h,
                                                       width: 50.w,
                                                     ),
@@ -176,7 +176,7 @@ class _ConnectionViewState extends State<ConnectionView> {
                                             SizedBox(width: 11.w),
                                             GestureDetector(
                                               onTap: () {
-                                              if (state.connectionList[index].isSaved == 0) {
+                                                if (state.connectionList[index].isSaved == 0) {
                                                   state.savePost(context, state.connectionList[index].id.toString());
                                                 } else {
                                                   state.removeSavedPost(context, state.connectionList[index].id.toString());
@@ -185,7 +185,7 @@ class _ConnectionViewState extends State<ConnectionView> {
                                               child: Container(
                                                 height: 40.h,
                                                 width: 40.w,
-                                                padding: EdgeInsets.all( state.connectionList[index].isSaved == 0?7.h:10.h),
+                                                padding: EdgeInsets.all(state.connectionList[index].isSaved == 0 ? 7.h : 10.h),
                                                 child: Image.asset(
                                                   state.connectionList[index].isSaved == 0 ? saveIc : bookmarkFillIc,
                                                   height: 24.h,

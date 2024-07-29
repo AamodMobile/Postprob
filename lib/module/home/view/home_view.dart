@@ -80,7 +80,7 @@ class _HomeViewState extends State<HomeView> {
                           SizedBox(width: 30.w),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(context, createBottomToTopRoute(const ProfileDetailsView(title: ''), 1));
+                              Navigator.push(context, createBottomToTopRoute(const ProfileDetailsView(title: '')));
                             },
                             child: Container(
                               height: 40.h,
@@ -425,27 +425,25 @@ class _HomeViewState extends State<HomeView> {
                                               color: Color(0xFFD6CDFE),
                                               shape: BoxShape.circle,
                                             ),
-                                            child: postJob.user!.image != ""
-                                                ? ClipRRect(
-                                                    borderRadius: BorderRadius.circular(20.dm),
-                                                    child: CachedNetworkImage(
-                                                      errorWidget: (context, url, error) => Image.asset(
-                                                        demoUser,
-                                                        height: 50.h,
-                                                        width: 50.w,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      height: 50.h,
-                                                      width: 50.w,
-                                                      fit: BoxFit.cover,
-                                                      imageUrl: ApiUrl.imageUrl + postJob.user!.image.toString(),
-                                                      placeholder: (a, b) => const Center(
-                                                        child: CircularProgressIndicator(),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Image.asset(appleIc),
-                                          ),
+                                            child:ClipRRect(
+                                              borderRadius: BorderRadius.circular(20.dm),
+                                              child:  postJob.files != null &&  postJob.files!.isNotEmpty
+                                                  ? CachedNetworkImage(
+                                                errorWidget: (context, url, error) => Image.asset(
+                                                  videoDemoImg,
+                                                  height: 40.h,
+                                                  width: 40.w,
+                                                  fit: BoxFit.contain,
+                                                ),
+                                                height: 40.h,
+                                                width: 40.w,
+                                                fit: BoxFit.contain,
+                                                imageUrl: ApiUrl.imageUrl + postJob.files![0].file.toString(),
+                                                placeholder: (a, b) => const Center(
+                                                  child: CircularProgressIndicator(),
+                                                ),
+                                              )
+                                                  : Image.asset(itTypeIc),),),
                                           SizedBox(
                                             width: 10.w,
                                           ),
@@ -468,7 +466,7 @@ class _HomeViewState extends State<HomeView> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  postJob.city!.city.toString(),
+                                                  postJob.city!.title.toString(),
                                                   textAlign: TextAlign.center,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,

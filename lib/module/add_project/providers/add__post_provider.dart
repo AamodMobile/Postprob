@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/add_project/models/cities_model.dart';
@@ -20,12 +21,35 @@ class AddPostProvider extends ChangeNotifier {
   TextEditingController title = TextEditingController();
   TextEditingController position = TextEditingController();
   TextEditingController description = TextEditingController();
+  TextEditingController hashTag = TextEditingController();
   String employmentTypeId = "";
   String employmentTypeTittle = "";
   String locationId = "";
   String locationTittle = "";
   String workTypeId = "";
   var successPostModel = SuccessPostJobModel();
+  File postImage = File("");
+
+  void reset() {
+    categoryList.clear();
+    employmentType.clear();
+    cityList.clear();
+    filteredList.clear();
+    tags.clear();
+    postFiles.clear();
+    searchQuery.text = "";
+    title.text = "";
+    position.text = "";
+    description.text = "";
+    hashTag.text = "";
+    employmentTypeId = "";
+    employmentTypeTittle = "";
+    locationId = "";
+    locationTittle = "";
+    workTypeId = "";
+    successPostModel = SuccessPostJobModel();
+    postImage = File("");
+  }
 
   void employmentUpdate(String value, String v) {
     employmentTypeId = value;
@@ -113,6 +137,7 @@ class AddPostProvider extends ChangeNotifier {
 
   Future<void> createPostProblem(BuildContext context, String categoryId) async {
     try {
+      postFiles.add(postImage);
       showProgress(context);
       var result = await ApiService.postCreate(
         title.text,

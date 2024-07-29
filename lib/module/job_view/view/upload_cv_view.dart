@@ -108,7 +108,7 @@ class _UploadCVViewState extends State<UploadCVView> {
                                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                     child: Row(
                                       children: [
-                                        Expanded(
+                                      /*  Expanded(
                                           child: Text(
                                             "Google",
                                             textAlign: TextAlign.center,
@@ -126,7 +126,7 @@ class _UploadCVViewState extends State<UploadCVView> {
                                           width: 7,
                                           margin: EdgeInsets.symmetric(horizontal: 10.w),
                                           decoration: const BoxDecoration(color: Color(0xFF0D0140), shape: BoxShape.circle),
-                                        ),
+                                        ),*/
                                         Expanded(
                                           child: Text(
                                             state.postDetailsModel.city!.title.toString(),

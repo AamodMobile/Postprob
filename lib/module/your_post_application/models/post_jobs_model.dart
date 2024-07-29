@@ -1,6 +1,7 @@
 import 'package:postprob/module/add_project/models/cities_model.dart';
 import 'package:postprob/module/connection/models/category_model.dart';
 import 'package:postprob/module/connection/models/employment_type_model.dart';
+import 'package:postprob/module/connection/models/file_element_model.dart';
 import 'package:postprob/module/login/model/user_model.dart';
 
 class PostJobsListModel {
@@ -25,6 +26,7 @@ class PostJobsListModel {
   dynamic workplace;
   CitiesModel? city;
   User? user;
+  List<FileElement>? files;
 
   PostJobsListModel({
     this.id,
@@ -48,6 +50,7 @@ class PostJobsListModel {
     this.workplace,
     this.city,
     this.user,
+    this.files,
   });
 
   factory PostJobsListModel.fromJson(Map<String, dynamic> json) => PostJobsListModel(
@@ -72,6 +75,7 @@ class PostJobsListModel {
         workplace: json["workplace"],
         city: json["city"] == null ? null : CitiesModel.fromJson(json["city"]),
         user: json["user"] == null ? null : User.fromJson(json["user"]),
+        files: json["files"] == null ? [] : List<FileElement>.from(json["files"]!.map((x) => FileElement.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -96,5 +100,6 @@ class PostJobsListModel {
         "workplace": workplace,
         "city": city?.toJson(),
         "user": user?.toJson(),
+        "files": files == null ? [] : List<dynamic>.from(files!.map((x) => x.toJson())),
       };
 }

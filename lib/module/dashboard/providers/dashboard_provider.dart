@@ -10,6 +10,7 @@ import 'package:postprob/module/home/view/home_view.dart';
 import 'package:postprob/module/login/model/user_model.dart';
 import 'package:postprob/module/save/views/save_view.dart';
 import 'package:postprob/services/api_logs.dart';
+import 'package:postprob/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardProvider extends ChangeNotifier {
@@ -61,6 +62,7 @@ class DashboardProvider extends ChangeNotifier {
 
       userName = await LocalStorage.getUserName();
       var profilePic = await LocalStorage.getUserProfile();
+      Log.console(profilePic);
     } catch (e) {
       Log.console('Error initializing app: $e');
     }
@@ -89,5 +91,24 @@ class DashboardProvider extends ChangeNotifier {
       indexStack = [index];
       notifyListeners();
     }
+  }
+
+  Future<void> updateFcmTokenApi(String fcmToken, BuildContext context) async {
+    try {
+      var result = await ApiService.updateFcmToken(fcmToken);
+      var json = jsonDecode(result.body);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          Log.console(json["message"].toString());
+        } else {
+          // errorToast(context, json["message"].toString());
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        // errorToast(context, e.toString());
+      }
+    }
+    notifyListeners();
   }
 }

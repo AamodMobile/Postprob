@@ -25,7 +25,7 @@ class SignUpProvider extends ChangeNotifier {
   var state = "";
   var cityModel;
   var cityList = <CitiesModel>[];
-
+  bool isHide = true;
   void reset() {
     password.clear();
     emailController.clear();
@@ -57,7 +57,10 @@ class SignUpProvider extends ChangeNotifier {
     name.text = nameT;
     notifyListeners();
   }
-
+  void isShow(bool show) {
+    isHide = show;
+    notifyListeners();
+  }
   String? emailValidator(value) {
     const pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
     final regExp = RegExp(pattern);
@@ -108,12 +111,7 @@ class SignUpProvider extends ChangeNotifier {
           );
           await pref.setString('currentToken', apiResponse.accessToken.toString());
           if (context.mounted) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                createRightToLeftRoute(const DashboardView(
-                  index: 0,
-                )),
-                (route) => false);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const DashboardView(index: 0)), (route) => false);
             successToast(context, json["message"]);
           }
         } else {

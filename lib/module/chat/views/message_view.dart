@@ -31,29 +31,25 @@ class MessageView extends StatefulWidget {
 }
 
 class _MessageViewState extends State<MessageView> {
-  TextEditingController msg = TextEditingController();
-  File image = File("");
   late ChatListProvider chatListProvider;
 
   @override
   void initState() {
+    super.initState();
     chatListProvider = context.read<ChatListProvider>();
+    chatListProvider.files.clear();
     chatListProvider.otherUserId = widget.id;
-    chatListProvider.getMessages(context, widget.id, true).then((value) {
+    chatListProvider.currentPage = 1;
+    chatListProvider.getMessages(true, isFast: true).then((value) {
       chatListProvider.initializePusher();
     });
-    super.initState();
+    chatListProvider.setupScrollListener();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatListProvider>(
       builder: (context, state, child) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (chatListProvider.scrollController.hasClients) {
-            chatListProvider.scrollController.jumpTo(chatListProvider.scrollController.position.maxScrollExtent);
-          }
-        });
         return SafeArea(
           child: Scaffold(
             backgroundColor: const Color(0xFFF9F9F9),
@@ -120,13 +116,13 @@ class _MessageViewState extends State<MessageView> {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.volume_off,
-                                size: 16.sp,
+                                state.isMute == "0" ? Icons.volume_off : Icons.volume_down,
+                                size: state.isMute == "0" ? 16.sp : 18.sp,
                                 color: smallTextCl,
                               ),
                               SizedBox(width: 5.w),
                               Text(
-                                "Mute",
+                                state.isMute == "0" ? "Mute" : "UnMute",
                                 style: TextStyle(
                                   color: smallTextCl,
                                   fontFamily: regular,
@@ -145,13 +141,13 @@ class _MessageViewState extends State<MessageView> {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.block,
+                                state.isBlock == "0" ? Icons.block : Icons.check,
                                 size: 16.sp,
                                 color: smallTextCl,
                               ),
                               SizedBox(width: 5.w),
                               Text(
-                                "Block Chat",
+                                state.isBlock == "0" ? "Block Chat" : "Unblock Chat",
                                 style: TextStyle(
                                   color: smallTextCl,
                                   fontFamily: regular,
@@ -166,8 +162,20 @@ class _MessageViewState extends State<MessageView> {
                       ],
                     ).then((value) {
                       if (value == 1) {
+                        chatListProvider.clearAllMessages(context, chatListProvider.eventId);
                       } else if (value == 2) {
-                      } else if (value == 3) {}
+                        if (state.isMute == "0") {
+                          state.muteChat(context, "1");
+                        } else {
+                          state.muteChat(context, "0");
+                        }
+                      } else if (value == 3) {
+                        if (state.isBlock == "0") {
+                          state.blockChat(context, "1");
+                        } else {
+                          state.blockChat(context, "0");
+                        }
+                      }
                     });
                   },
                   child: Padding(
@@ -339,8 +347,12 @@ class _MessageViewState extends State<MessageView> {
                               child: Align(
                                 alignment: (state.messageList[index].isSender.toString() == "0" ? Alignment.topLeft : Alignment.topRight),
                                 child: state.messageList[index].isSender.toString() == "0"
-                                    ? ReceiverChatItem(messageListModel: state.messageList[index])
-                                    : SenderChatItem(messageListModel: state.messageList[index], file: false),
+                                    ? ReceiverChatItem(
+                                        messageListModel: state.messageList[index],
+                                        file: state.messageList[index].filePath!.isEmpty ? false : true,
+                                        image: widget.user.image.toString(),
+                                      )
+                                    : SenderChatItem(messageListModel: state.messageList[index], file: state.messageList[index].filePath!.isEmpty ? false : true),
                               ),
                             ),
                           ],
@@ -352,77 +364,95 @@ class _MessageViewState extends State<MessageView> {
                 SizedBox(height: 76.h)
               ],
             ),
-            bottomSheet: Container(
-              color: const Color(0xFFF9F9F9),
-              height: 75,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
-                          controller: msg,
-                          hintText: 'Write your message',
-                          obscureText: false,
-                          readOnly: false,
-                          borderCl: Colors.white,
-                          fillColor: Colors.white,
-                          leading: InkWell(
-                            onTap: () {
-                              onPickAvatarTap(context);
-                            },
-                            child: Material(
-                              color: Colors.transparent,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Image.asset(
-                                  paperPinIc,
-                                  height: 24.h,
-                                  width: 24.w,
+            bottomSheet: state.isBlock == "1"
+                ? Container(
+                    color: const Color(0xFFF9F9F9),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 15.h),
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Chat Block",
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: blackCl,
+                        fontFamily: medium,
+                        fontSize: 16.sp,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  )
+                : Container(
+                    color: const Color(0xFFF9F9F9),
+                    height: 75,
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CustomTextField(
+                                controller: state.msg,
+                                hintText: 'Write your message',
+                                obscureText: false,
+                                readOnly: false,
+                                borderCl: Colors.white,
+                                fillColor: Colors.white,
+                                leading: InkWell(
+                                  onTap: () {
+                                    onPickAvatarTap(context);
+                                  },
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Image.asset(
+                                        paperPinIc,
+                                        height: 24.h,
+                                        width: 24.w,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 9.w),
-                      InkWell(
-                        onTap: () {
-                          if (msg.text == "") {
-                            errorToast(context, "Please enter msg");
-                          } else {
-                            state.sendMessage(context, msg.text, widget.id).then((value) {
-                              msg.text = "";
-                              chatListProvider.scrollToBottom();
-                            });
-                          }
-                        },
-                        child: Container(
-                          height: 50.h,
-                          width: 50.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.dm),
-                            color: mainColor,
-                          ),
-                          child: Center(
-                            child: Image.asset(
-                              sendFillIc,
-                              height: 24.h,
-                              width: 24.w,
-                              color: Colors.white,
+                            SizedBox(width: 9.w),
+                            InkWell(
+                              onTap: () {
+                                if (state.msg.text == "") {
+                                  errorToast(context, "Please enter msg");
+                                } else {
+                                  state.sendMessage(context, state.msg.text).then((value) {
+                                    chatListProvider.scrollToBottom();
+                                  });
+                                }
+                              },
+                              child: Container(
+                                height: 50.h,
+                                width: 50.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15.dm),
+                                  color: mainColor,
+                                ),
+                                child: Center(
+                                  child: Image.asset(
+                                    sendFillIc,
+                                    height: 24.h,
+                                    width: 24.w,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 20.h)
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 20.h)
-                ],
-              ),
-            ),
           ),
         );
       },
@@ -442,8 +472,9 @@ class _MessageViewState extends State<MessageView> {
           context: context,
         ).pickedFile(value);
         if (pickedFile != null) {
-          image = pickedFile;
-          var path = image.path;
+          chatListProvider.image = pickedFile;
+          var path = chatListProvider.image.path;
+          chatListProvider.files.add(chatListProvider.image);
           Log.console(path);
         }
       }

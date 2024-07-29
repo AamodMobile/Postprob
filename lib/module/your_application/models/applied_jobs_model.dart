@@ -2,6 +2,7 @@
 import 'package:postprob/module/add_project/models/cities_model.dart';
 import 'package:postprob/module/connection/models/category_model.dart';
 import 'package:postprob/module/connection/models/employment_type_model.dart';
+import 'package:postprob/module/connection/models/file_element_model.dart';
 import 'package:postprob/module/login/model/user_model.dart';
 class AppliedJobsModel {
   int? id;
@@ -24,6 +25,7 @@ class AppliedJobsModel {
     this.updatedAt,
     this.appliedAt,
     this.jobDetail,
+
   });
 
   factory AppliedJobsModel.fromJson(Map<String, dynamic> json) => AppliedJobsModel(
@@ -36,6 +38,7 @@ class AppliedJobsModel {
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     appliedAt: json["applied_at"],
     jobDetail: json["job_detail"] == null ? null : JobDetail.fromJson(json["job_detail"]),
+
   );
 
   Map<String, dynamic> toJson() => {
@@ -48,6 +51,7 @@ class AppliedJobsModel {
     "updated_at": updatedAt?.toIso8601String(),
     "applied_at": appliedAt,
     "job_detail": jobDetail?.toJson(),
+
   };
 }
 
@@ -73,7 +77,7 @@ class JobDetail {
   Category? workplace;
   CitiesModel? city;
   UserModel? user;
-
+  List<FileElement>? files;
   JobDetail({
     this.id,
     this.title,
@@ -96,6 +100,7 @@ class JobDetail {
     this.workplace,
     this.city,
     this.user,
+    this.files,
   });
 
   factory JobDetail.fromJson(Map<String, dynamic> json) => JobDetail(
@@ -120,6 +125,7 @@ class JobDetail {
     workplace: json["workplace"] == null ? null : Category.fromJson(json["workplace"]),
     city: json["city"] == null ? null : CitiesModel.fromJson(json["city"]),
     user: json["user"] == null ? null : UserModel.fromJson(json["user"]),
+    files: json["files"] == null ? [] : List<FileElement>.from(json["files"]!.map((x) => FileElement.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -144,6 +150,7 @@ class JobDetail {
     "workplace": workplace?.toJson(),
     "city": city?.toJson(),
     "user": user?.toJson(),
+    "files": files == null ? [] : List<dynamic>.from(files!.map((x) => x.toJson())),
   };
 }
 

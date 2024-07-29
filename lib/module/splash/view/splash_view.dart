@@ -44,17 +44,9 @@ class _SplashViewState extends State<SplashView> {
       (value) {
         if (crtData != null) {
           UserModel crtUser = UserModel.fromJson(jsonDecode(crtData));
-          Navigator.pushAndRemoveUntil(
-            context,
-            createBottomToTopRoute(const DashboardView(index: 0,), 4),
-            (route) => false,
-          );
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const DashboardView(index: 0)), (route) => false);
         } else {
-          Navigator.pushAndRemoveUntil(
-            context,
-            createBottomToTopRoute(const IntroView(), 4),
-            (route) => false,
-          );
+          Navigator.pushAndRemoveUntil(context, createRightToLeftRoute(const IntroView()), (route) => false);
         }
       },
     );

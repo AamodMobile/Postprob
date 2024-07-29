@@ -106,7 +106,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  state.profileModel.cityState??"",
+                                  state.profileModel.citystate ?? "",
                                   textAlign: TextAlign.start,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -147,7 +147,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                         children: [
                           RichText(
                               text: TextSpan(
-                                  text: "120k ",
+                                  text: state.profileModel.totalPosts.toString(),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: medium,
@@ -157,7 +157,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                   ),
                                   children: [
                                 TextSpan(
-                                  text: "Posts",
+                                  text: " Posts",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: medium,
@@ -167,7 +167,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                   ),
                                 )
                               ])),
-                          RichText(
+                          /* RichText(
                               text: TextSpan(
                                   text: "120k ",
                                   style: TextStyle(
@@ -188,7 +188,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                     fontWeight: FontWeight.w400,
                                   ),
                                 )
-                              ])),
+                              ])),*/
                           GestureDetector(
                             onTap: () {
                               Navigator.push(context, createRightToLeftRoute(const EditProfileView()));
@@ -368,69 +368,80 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                     ),
                                   ],
                                 ),
-                                if (state.profileModel.experience != null)
+                                if (state.profileModel.experience != null && state.profileModel.experience!.isNotEmpty)
                                   title == "Work experience"
-                                      ? Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(height: 20.h),
-                                            Divider(color: dividerCl, height: 1.h),
-                                            SizedBox(height: 20.h),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  state.profileModel.experience!.title.toString(),
-                                                  style: TextStyle(
-                                                    color: mediumTextCl,
-                                                    fontFamily: medium,
-                                                    fontSize: 14.sp,
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w700,
+                                      ? MediaQuery.removePadding(
+                                          context: context,
+                                          removeTop: true,
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: state.profileModel.experience?.length,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            itemBuilder: (BuildContext context, int index) {
+                                              return Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(height: 20.h),
+                                                  Divider(color: dividerCl, height: 1.h),
+                                                  SizedBox(height: 20.h),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        state.profileModel.experience![index].title.toString(),
+                                                        style: TextStyle(
+                                                          color: mediumTextCl,
+                                                          fontFamily: medium,
+                                                          fontSize: 14.sp,
+                                                          fontStyle: FontStyle.normal,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      const Spacer(),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              createRightToLeftRoute(AddWorkExperienceView(
+                                                                isEdit: true,
+                                                                id: state.profileModel.experience![index].id.toString(),
+                                                                experience: state.profileModel.experience![index],
+                                                              )));
+                                                        },
+                                                        child: Image.asset(
+                                                          editIc,
+                                                          height: 24.h,
+                                                          width: 24.w,
+                                                          color: yellowDark,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ),
-                                                const Spacer(),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        createRightToLeftRoute(AddWorkExperienceView(
-                                                          isEdit: true,
-                                                          id: state.profileModel.experience!.id.toString(),
-                                                          experience: state.profileModel.experience,
-                                                        )));
-                                                  },
-                                                  child: Image.asset(
-                                                    editIc,
-                                                    height: 24.h,
-                                                    width: 24.w,
-                                                    color: yellowDark,
+                                                  SizedBox(height: 5.h),
+                                                  Text(
+                                                    state.profileModel.experience![index].company.toString(),
+                                                    style: TextStyle(
+                                                      color: smallTextCl,
+                                                      fontFamily: regular,
+                                                      fontSize: 12.sp,
+                                                      fontStyle: FontStyle.normal,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 5.h),
-                                            Text(
-                                              state.profileModel.experience!.company.toString(),
-                                              style: TextStyle(
-                                                color: smallTextCl,
-                                                fontFamily: regular,
-                                                fontSize: 12.sp,
-                                                fontStyle: FontStyle.normal,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                            SizedBox(height: 5.h),
-                                            Text(
-                                              "${state.profileModel.experience!.startDate.toString()} - ${state.profileModel.experience!.endDate.toString()} ,${calculateDuration(state.profileModel.education!.startDate.toString(), state.profileModel.education!.endDate.toString())}",
-                                              style: TextStyle(
-                                                color: smallTextCl,
-                                                fontFamily: regular,
-                                                fontSize: 12.sp,
-                                                fontStyle: FontStyle.normal,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ],
+                                                  SizedBox(height: 5.h),
+                                                  Text(
+                                                    "${state.profileModel.experience![index].startDate.toString()} - ${state.profileModel.experience![index].endDate.toString()} ,${calculateDuration(state.profileModel.experience![index].startDate.toString(), state.profileModel.experience![index].endDate.toString())}",
+                                                    style: TextStyle(
+                                                      color: smallTextCl,
+                                                      fontFamily: regular,
+                                                      fontSize: 12.sp,
+                                                      fontStyle: FontStyle.normal,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
                                         )
                                       : const SizedBox()
                               ],
@@ -489,69 +500,80 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                     ),
                                   ],
                                 ),
-                                if (state.profileModel.education != null)
+                                if (state.profileModel.education != null && state.profileModel.education!.isNotEmpty)
                                   title == "Education"
-                                      ? Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(height: 20.h),
-                                            Divider(color: dividerCl, height: 1.h),
-                                            SizedBox(height: 20.h),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  state.profileModel.education!.educationLavel.toString(),
-                                                  style: TextStyle(
-                                                    color: mediumTextCl,
-                                                    fontFamily: medium,
-                                                    fontSize: 14.sp,
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w700,
+                                      ? MediaQuery.removePadding(
+                                          context: context,
+                                          removeTop: true,
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: state.profileModel.education?.length,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            itemBuilder: (BuildContext context, int index) {
+                                              return Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(height: 20.h),
+                                                  Divider(color: dividerCl, height: 1.h),
+                                                  SizedBox(height: 20.h),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        state.profileModel.education![index].educationLavel.toString(),
+                                                        style: TextStyle(
+                                                          color: mediumTextCl,
+                                                          fontFamily: medium,
+                                                          fontSize: 14.sp,
+                                                          fontStyle: FontStyle.normal,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      const Spacer(),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              createRightToLeftRoute(AddEducationView(
+                                                                isEdit: true,
+                                                                id: state.profileModel.education![index].id.toString(),
+                                                                education: state.profileModel.education![index],
+                                                              )));
+                                                        },
+                                                        child: Image.asset(
+                                                          editIc,
+                                                          height: 24.h,
+                                                          width: 24.w,
+                                                          color: yellowDark,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ),
-                                                const Spacer(),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        createRightToLeftRoute(AddEducationView(
-                                                          isEdit: true,
-                                                          id: state.profileModel.education!.id.toString(),
-                                                          education: state.profileModel.education,
-                                                        )));
-                                                  },
-                                                  child: Image.asset(
-                                                    editIc,
-                                                    height: 24.h,
-                                                    width: 24.w,
-                                                    color: yellowDark,
+                                                  SizedBox(height: 5.h),
+                                                  Text(
+                                                    state.profileModel.education![index].institutionName.toString(),
+                                                    style: TextStyle(
+                                                      color: smallTextCl,
+                                                      fontFamily: regular,
+                                                      fontSize: 12.sp,
+                                                      fontStyle: FontStyle.normal,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 5.h),
-                                            Text(
-                                              state.profileModel.education!.institutionName.toString(),
-                                              style: TextStyle(
-                                                color: smallTextCl,
-                                                fontFamily: regular,
-                                                fontSize: 12.sp,
-                                                fontStyle: FontStyle.normal,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                            SizedBox(height: 5.h),
-                                            Text(
-                                              "${state.profileModel.education!.startDate.toString()} - ${state.profileModel.education!.endDate.toString()} ,${calculateDuration(state.profileModel.education!.startDate.toString(), state.profileModel.education!.endDate.toString())}",
-                                              style: TextStyle(
-                                                color: smallTextCl,
-                                                fontFamily: regular,
-                                                fontSize: 12.sp,
-                                                fontStyle: FontStyle.normal,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ],
+                                                  SizedBox(height: 5.h),
+                                                  Text(
+                                                    "${state.profileModel.education![index].startDate.toString()} - ${state.profileModel.education![index].endDate.toString()} ,${calculateDuration(state.profileModel.education![index].startDate.toString(), state.profileModel.education![index].endDate.toString())}",
+                                                    style: TextStyle(
+                                                      color: smallTextCl,
+                                                      fontFamily: regular,
+                                                      fontSize: 12.sp,
+                                                      fontStyle: FontStyle.normal,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
                                         )
                                       : const SizedBox()
                               ],
@@ -870,12 +892,30 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
   }
 
   String calculateDuration(String startDateString, String endDateString) {
-    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+    DateFormat dateFormat = DateFormat('dd-MM-yyyy');
     DateTime startDate = dateFormat.parse(startDateString);
     DateTime endDate = dateFormat.parse(endDateString);
     Duration difference = endDate.difference(startDate);
-    int years = difference.inDays ~/ 365;
-    String durationString = " $years Years";
-    return durationString;
+
+    int totalDays = difference.inDays;
+    int years = totalDays ~/ 365;
+    int remainingDays = totalDays % 365;
+    int months = remainingDays ~/ 30;
+    int days = remainingDays % 30;
+
+    String durationString = "";
+    if (years > 0) {
+      durationString += "$years Years ";
+    }
+    if (months > 0) {
+      durationString += "$months Months ";
+    }
+    if (days > 0) {
+      durationString += "$days Days";
+    } else {
+      durationString += "1 Days";
+    }
+
+    return durationString.trim();
   }
 }

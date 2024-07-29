@@ -139,7 +139,7 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 28.0),
                                         child: Text(
-                                          state.postDetailsModel.title.toString(),
+                                          state.postDetailsModel.user!.name.toString(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: blackCl,
@@ -155,7 +155,7 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                         child: Row(
                                           children: [
-                                            Expanded(
+                                            /* Expanded(
                                               child: Text(
                                                 "Google",
                                                 textAlign: TextAlign.center,
@@ -173,11 +173,10 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                               width: 7,
                                               margin: EdgeInsets.symmetric(horizontal: 10.w),
                                               decoration: const BoxDecoration(color: Color(0xFF0D0140), shape: BoxShape.circle),
-                                            ),
+                                            ),*/
                                             Expanded(
                                               child: Text(
-                                                  state.postDetailsModel.city!=null?
-                                                state.postDetailsModel.city!.title.toString():"",
+                                                state.postDetailsModel.city != null ? state.postDetailsModel.city!.title.toString() : "",
                                                 textAlign: TextAlign.center,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -231,25 +230,25 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                 ),
                                 child: state.postDetailsModel.user!.image != ""
                                     ? Center(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(30.dm),
-                                    child: CachedNetworkImage(
-                                      errorWidget: (context, url, error) => Image.asset(
-                                        demoUser,
-                                        height: 60.h,
-                                        width: 60.w,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      height: 60.h,
-                                      width: 60.w,
-                                      fit: BoxFit.cover,
-                                      imageUrl: ApiUrl.imageUrl + state.postDetailsModel.user!.image.toString(),
-                                      placeholder: (a, b) => const Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                  ),
-                                )
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(30.dm),
+                                          child: CachedNetworkImage(
+                                            errorWidget: (context, url, error) => Image.asset(
+                                              demoUser,
+                                              height: 60.h,
+                                              width: 60.w,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            height: 60.h,
+                                            width: 60.w,
+                                            fit: BoxFit.cover,
+                                            imageUrl: ApiUrl.imageUrl + state.postDetailsModel.user!.image.toString(),
+                                            placeholder: (a, b) => const Center(
+                                              child: CircularProgressIndicator(),
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                     : Image.asset(googleIc),
                               ),
                             ),
@@ -257,28 +256,11 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                         ),
                       ),
                       SizedBox(height: 15.h),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20.w),
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 5.h,
-                        ),
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.dm)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              "About us",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: blackCl,
-                                fontFamily: semiBold,
-                                fontSize: 14.sp,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 10.h),
                               decoration: BoxDecoration(color: yellowDark, borderRadius: BorderRadius.circular(10.dm)),
@@ -292,17 +274,6 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                   fontStyle: FontStyle.normal,
                                   fontWeight: FontWeight.w700,
                                 ),
-                              ),
-                            ),
-                            Text(
-                              "PROFILE",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: blackCl,
-                                fontFamily: semiBold,
-                                fontSize: 14.sp,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ],
@@ -328,7 +299,7 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(25.dm),
-                                        child: state.postDetailsModel.user!.image != ""
+                                        child: state.postDetailsModel.files != null && state.postDetailsModel.files!.isNotEmpty
                                             ? CachedNetworkImage(
                                                 errorWidget: (context, url, error) => Image.asset(
                                                   demoUser,
@@ -338,8 +309,8 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                                 ),
                                                 height: 50.h,
                                                 width: 50.w,
-                                             fit: BoxFit.cover,
-                                                imageUrl: ApiUrl.imageUrl + state.postDetailsModel.user!.image.toString(),
+                                                fit: BoxFit.cover,
+                                                imageUrl: ApiUrl.imageUrl + state.postDetailsModel.files![0].file.toString(),
                                                 placeholder: (a, b) => const Center(
                                                   child: CircularProgressIndicator(),
                                                 ),
@@ -357,7 +328,7 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              state.postDetailsModel.user!.name.toString(),
+                                              state.postDetailsModel.title.toString(),
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                 color: mediumTextCl,
@@ -396,7 +367,7 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                   ),
                                   SizedBox(height: 20.h),
                                   Text(
-                                    state.postDetailsModel.title.toString(),
+                                    state.postDetailsModel.position.toString(),
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       color: mediumTextCl,
@@ -412,53 +383,28 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                     trimLines: 4,
                                   ),
                                   SizedBox(height: 15.h),
-                                  Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(20.dm),
-                                        child: Image.asset(
-                                          videoDemoImg,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 0,
-                                        bottom: 0,
-                                        right: 0,
-                                        left: 0,
-                                        child: Center(
-                                          child: Image.asset(
-                                            playIc,
-                                            height: 46.h,
-                                            width: 46.w,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.dm),
+                                    child: state.postDetailsModel.files != null && state.postDetailsModel.files!.isNotEmpty
+                                        ? CachedNetworkImage(
+                                            errorWidget: (context, url, error) => Image.asset(
+                                              videoDemoImg,
+                                              height: 150.h,
+                                              width: MediaQuery.of(context).size.width,
+                                              fit: BoxFit.contain,
+                                            ),
+                                            height: 150.h,
+                                            width: MediaQuery.of(context).size.width,
+                                            fit: BoxFit.contain,
+                                            imageUrl: ApiUrl.imageUrl + state.postDetailsModel.files![0].file.toString(),
+                                            placeholder: (a, b) => const Center(
+                                              child: CircularProgressIndicator(),
+                                            ),
+                                          )
+                                        : Image.asset(
+                                            videoDemoImg,
+                                            fit: BoxFit.cover,
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 15.h),
-                                  Text(
-                                    "What's it like to work at Google?",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: mediumTextCl,
-                                      fontFamily: medium,
-                                      fontSize: 12.sp,
-                                      fontStyle: FontStyle.normal,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5.h),
-                                  Text(
-                                    "Youtube.com",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: mediumTextCl,
-                                      fontFamily: medium,
-                                      fontSize: 10.sp,
-                                      fontStyle: FontStyle.normal,
-                                      fontWeight: FontWeight.w400,
-                                    ),
                                   ),
                                   SizedBox(height: 35.h),
                                 ],
@@ -512,14 +458,13 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                               children: [
                                 CustomButtonWidget(
                                   onPressed: () {
-                                    if(state.postDetailsModel.isApplied==0){
-                                      Navigator.push(context, createRightToLeftRoute(UploadCVView(id: widget.postId,postDetailsModel: state.postDetailsModel)));
-                                    }else{
+                                    if (state.postDetailsModel.isApplied == 0) {
+                                      Navigator.push(context, createRightToLeftRoute(UploadCVView(id: widget.postId, postDetailsModel: state.postDetailsModel)));
+                                    } else {
                                       successToast(context, "Already Applied");
                                     }
-
                                   },
-                                  text: state.postDetailsModel.isApplied==0?"CONTACT NOW":"Applied".toUpperCase(),
+                                  text: state.postDetailsModel.isApplied == 0 ? "CONTACT NOW" : "Applied".toUpperCase(),
                                 ),
                                 SizedBox(height: 10.h)
                               ],

@@ -58,7 +58,6 @@ class _AddPostSecondViewState extends State<AddPostSecondView> {
                 GestureDetector(
                   onTap: () {
                     state.createPostProblem(context, widget.id);
-
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),

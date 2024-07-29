@@ -682,13 +682,13 @@ class ApiService {
       if (postFiles.isNotEmpty) {
         for (int i = 0; i < postFiles.length; i++) {
           final File file = File(postFiles[i].path);
-          http.MultipartFile file2 = await http.MultipartFile.fromPath("post_files[]", file.path.toString());
+          http.MultipartFile file2 = await http.MultipartFile.fromPath("post_files[$i]", file.path.toString());
           request.files.add(file2);
         }
       }
       if (tags.isNotEmpty) {
         for (int i = 0; i < tags.length; i++) {
-          request.fields['tags[]'] = tags[i];
+          request.fields['tags[$i]'] = tags[i];
         }
       }
       Log.console('Http.Post filed: ${request.fields}');
@@ -818,12 +818,12 @@ class ApiService {
     return response;
   }
 
-  static Future<http.Response> getMessages(String recipientId) async {
+  static Future<http.Response> getMessages(String recipientId, String pageId) async {
     http.Response response;
     var instance = await SharedPreferences.getInstance();
     var token = instance.getString('currentToken');
     var result = await ApiClient.postData(
-      ApiUrl.getMessages,
+      "${ApiUrl.getMessages}?page=$pageId",
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -833,28 +833,150 @@ class ApiService {
     return response;
   }
 
-  static Future<http.Response> sendMessage(
+  static Future<dynamic> sendMessage(
     String message,
     String recipientId,
     String eventId,
     String channelId,
+    var files,
+  ) async {
+    var result;
+    http.Response response;
+    try {
+      var url = ApiUrl.sendMessage;
+      Log.console('Http.Post Url: $url');
+      var instance = await SharedPreferences.getInstance();
+      var token = instance.getString('currentToken');
+      http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse(url));
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+      });
+      Log.console('Http.Post Headers: ${request.headers}');
+      request.fields['message'] = message;
+      request.fields['recipient_id'] = recipientId;
+      request.fields['workplace'] = "1";
+      request.fields['event_id'] = eventId;
+      request.fields['channel_id'] = channelId;
+      if (files.isNotEmpty) {
+        for (int i = 0; i < files.length; i++) {
+          final File file = File(files[i].path);
+          http.MultipartFile file2 = await http.MultipartFile.fromPath("files[$i]", file.path.toString());
+          request.files.add(file2);
+        }
+      }
+      Log.console('Http.Post filed: ${request.fields}');
+      response = await http.Response.fromStream(await request.send());
+      Log.console('Http.Response Body: ${response.body}');
+      if (response.statusCode == 200) {
+        result = jsonDecode(response.body);
+      } else if (response.statusCode == 404) {
+        result = {'status_code': 400, 'message': '404'};
+      } else if (response.statusCode == 401) {
+        result = jsonDecode(response.body);
+      }
+    } catch (e) {
+      result = http.Response(
+        jsonEncode({e.toString()}),
+        204,
+        headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
+      );
+    }
+    return result;
+  }
+
+  static Future<http.Response> updateFcmToken(String fcmToken) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(ApiUrl.fcmTokenUpdate, headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      "device_key": fcmToken,
+    });
+    response = http.Response(
+      jsonEncode(result),
+      200,
+      headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
+    );
+    return response;
+  }
+
+  static Future<http.Response> clearAllMessages(String eventId) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(ApiUrl.clearAllMessages, headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      "event_id": eventId,
+    });
+    response = http.Response(
+      jsonEncode(result),
+      200,
+      headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
+    );
+    return response;
+  }
+
+  static Future<http.Response> readAllMessages(String eventId) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(ApiUrl.readAllMessages, headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      "event_id": eventId,
+    });
+    response = http.Response(
+      jsonEncode(result),
+      200,
+      headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
+    );
+    return response;
+  }
+
+  static Future<http.Response> muteChat(
+    String channelId,
+    String recipientId,
+    String isMute,
   ) async {
     http.Response response;
     var instance = await SharedPreferences.getInstance();
     var token = instance.getString('currentToken');
-    var result = await ApiClient.postData(
-      ApiUrl.sendMessage,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-      body: {
-        "message": message,
-        "recipient_id": recipientId,
-        "event_id": eventId,
-        "channel_id": channelId,
-      },
+    var result = await ApiClient.postData(ApiUrl.muteChat, headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      "channel_id": channelId,
+      "recipient_id": recipientId,
+      "is_mute": isMute,
+    });
+    response = http.Response(
+      jsonEncode(result),
+      200,
+      headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
     );
-    response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
+    return response;
+  }
+  static Future<http.Response> blockChat(
+      String channelId,
+      String recipientId,
+      String isBlock,
+      ) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(ApiUrl.blockChat, headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      "channel_id": channelId,
+      "recipient_id": recipientId,
+      "is_block": isBlock,
+    });
+    response = http.Response(
+      jsonEncode(result),
+      200,
+      headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
+    );
     return response;
   }
 }

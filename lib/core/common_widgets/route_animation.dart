@@ -42,7 +42,7 @@ Route createRightToLeftRoute(Widget page) {
   );
 }
 
-Route createBottomToTopRoute(Widget page, int sec) {
+Route createBottomToTopRoute(Widget page) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -58,8 +58,8 @@ Route createBottomToTopRoute(Widget page, int sec) {
         child: child,
       );
     },
-    transitionDuration: Duration(seconds: sec),
-    reverseTransitionDuration: Duration(seconds: sec), // Ensure reverse duration is the same
+    transitionDuration: const Duration(milliseconds: 500),
+    reverseTransitionDuration: const Duration(milliseconds: 500), // Ensure reverse duration is the same
   );
 }
 

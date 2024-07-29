@@ -22,7 +22,7 @@ class _SettingsViewState extends State<SettingsView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ProfileProvider>(context, listen: false).userGetProfile(context).then((_) {
         profileProvider = Provider.of<ProfileProvider>(context, listen: false);
-        settingProvider.updateNotification(profileProvider.profileModel.isNotification ?? 0, context);
+        settingProvider.updateNotification(profileProvider.profileModel.isNotification ?? 0, context,true);
       });
     });
     super.initState();
@@ -128,9 +128,9 @@ class _SettingsViewState extends State<SettingsView> {
                             value: state.isNotification == 0 ? false : true,
                             onChanged: (value) {
                               if (state.isNotification == 0) {
-                                state.updateNotification(1, context);
+                                state.updateNotification(1, context,false);
                               } else {
-                                state.updateNotification(0, context);
+                                state.updateNotification(0, context,false);
                               }
                             },
                           ),

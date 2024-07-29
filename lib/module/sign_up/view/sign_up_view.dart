@@ -106,6 +106,7 @@ class _SignUpViewState extends State<SignUpView> {
                       CustomTextField(
                         labelText: "Password",
                         fillColor: Colors.white,
+                        obscureText: state.isHide,
                         validator: (v) {
                           if (v!.isEmpty) {
                             return "Enter password";
@@ -115,10 +116,19 @@ class _SignUpViewState extends State<SignUpView> {
                         onChanged: (v) {
                           state.passwordUpdate(v);
                         },
-                        leading1: Image.asset(
-                          iconEyeHideIc,
-                          height: 24.h,
-                          width: 24.w,
+                        leading1:GestureDetector(
+                          onTap: () {
+                            if (state.isHide) {
+                              state.isShow(false);
+                            } else {
+                              state.isShow(true);
+                            }
+                          },
+                          child: Image.asset(
+                            state.isHide ?phEyeIc: iconEyeHideIc  ,
+                            height: 24.h,
+                            width: 24.w,
+                          ),
                         ),
                       ),
                       SizedBox(

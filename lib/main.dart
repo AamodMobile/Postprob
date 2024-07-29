@@ -1,7 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/helper/firebase_options.dart';
+import 'package:postprob/helper/notification_helper.dart';
 import 'package:postprob/module/add_project/providers/add__post_provider.dart';
 import 'package:postprob/module/chat/providers/chat_list_provider.dart';
 import 'package:postprob/module/connection/providers/connection_provider.dart';
@@ -17,7 +22,33 @@ import 'package:postprob/module/sign_up/providers/sign_up_provider.dart';
 import 'package:postprob/module/splash/view/splash_view.dart';
 import 'package:postprob/module/your_application/providers/applied_job_provider.dart';
 import 'package:postprob/module/your_post_application/providers/post_application_provider.dart';
+import 'package:postprob/services/api_logs.dart';
+import 'package:rxdart/rxdart.dart';
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject = BehaviorSubject<ReceivedNotification>();
+
+final BehaviorSubject<String?> selectNotificationSubject = BehaviorSubject<String?>();
+
+class ReceivedNotification {
+  ReceivedNotification({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.payload,
+  });
+
+  final int id;
+  final String? title;
+  final String? body;
+  final String? payload;
+}
+
+String? selectedNotificationPayload;
+
+Future<void> backgroundHandler(RemoteMessage message) async {
+  Log.console('main.dart backgroundHandler');
+}
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
@@ -25,8 +56,46 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    Log.console('Got a message whilst in the foreground!');
+    Log.console('Message data: ${message.data}');
+    if (message.notification != null) {
+      Log.console('Message also contained a notification: ${message.notification}');
+    }
+  });
+
+  var initializationSettingsAndroid = const AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
+    onDidReceiveLocalNotification: (int id, String? title, String? body, String? payload) async {
+      didReceiveLocalNotificationSubject.add(ReceivedNotification(id: id, title: title, body: body, payload: payload));
+    },
+  );
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: (payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+    if (payload != null && payload.toString() != reminder) {
+    } else if (payload != null && payload.toString() == reminder) {}
+    selectedNotificationPayload = payload.toString();
+    selectNotificationSubject.add(payload as String?);
+  });
+
+  NotificationHelper().initializeNotification();
   runApp(const MyApp());
   HttpOverrides.global = MyHttpOverrides();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

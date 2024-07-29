@@ -151,32 +151,36 @@ class _PostApplicationListViewState extends State<PostApplicationListView> {
                                                 width: 40.w,
                                                 padding: const EdgeInsets.all(8),
                                                 decoration: const BoxDecoration(color: Color(0xFFD6CDFE), shape: BoxShape.circle),
-                                                child: state.postJobsList[index].user!.image != ""
-                                                    ? ClipRRect(
-                                                        borderRadius: BorderRadius.circular(20.dm),
-                                                        child: CachedNetworkImage(
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(20.dm),
+                                                  child: state.postJobsList[index].files != null && state.postJobsList[index].files!.isNotEmpty
+                                                      ? CachedNetworkImage(
                                                           errorWidget: (context, url, error) => Image.asset(
-                                                            appleIc,
+                                                            videoDemoImg,
                                                             height: 40.h,
                                                             width: 40.w,
-                                                            fit: BoxFit.cover,
+                                                            fit: BoxFit.contain,
                                                           ),
                                                           height: 40.h,
                                                           width: 40.w,
-                                                          fit: BoxFit.cover,
-                                                          imageUrl: ApiUrl.imageUrl + state.postJobsList[index].user!.image.toString(),
+                                                          fit: BoxFit.contain,
+                                                          imageUrl: ApiUrl.imageUrl + state.postJobsList[index].files![0].file.toString(),
                                                           placeholder: (a, b) => const Center(
                                                             child: CircularProgressIndicator(),
                                                           ),
+                                                        )
+                                                      : Image.asset(
+                                                          itTypeIc,
+                                                          height: 40.h,
+                                                          width: 40.w,
                                                         ),
-                                                      )
-                                                    : Image.asset(appleIc),
+                                                ),
                                               ),
                                               SizedBox(
                                                 height: 10.h,
                                               ),
                                               Text(
-                                                state.postJobsList[index].category!.title.toString(),
+                                                state.postJobsList[index].title.toString(),
                                                 textAlign: TextAlign.center,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -222,7 +226,7 @@ class _PostApplicationListViewState extends State<PostApplicationListView> {
                                               color: const Color(0xFFf5f4f6),
                                             ),
                                             child: Text(
-                                              state.postJobsList[index].position!.toString(),
+                                              state.postJobsList[index].category!.title!.toString(),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 color: smallTextCl,

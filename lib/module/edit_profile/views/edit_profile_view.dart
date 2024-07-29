@@ -31,7 +31,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         editProfileProvider.email.text = profileProvider.profileModel.email.toString();
         editProfileProvider.phone.text = profileProvider.profileModel.mobile.toString();
         editProfileProvider.dob.text = profileProvider.profileModel.dob.toString();
-        editProfileProvider.cityState = profileProvider.profileModel.cityState.toString();
+        editProfileProvider.cityState = profileProvider.profileModel.citystate.toString();
         editProfileProvider.setGender(profileProvider.profileModel.gender.toString());
       });
     });

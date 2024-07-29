@@ -38,4 +38,9 @@ class ApiUrl {
   static const String chatList = "${baseUrl}chat-list";
   static const String getMessages = "${baseUrl}get-messages";
   static const String sendMessage = "${baseUrl}send-message";
+  static const String fcmTokenUpdate = "${baseUrl}user/device_key_update";
+  static const String clearAllMessages = "${baseUrl}clear-all-messages";
+  static const String readAllMessages = "${baseUrl}read-all-messages";
+  static const String muteChat = "${baseUrl}mute-chat";
+  static const String blockChat = "${baseUrl}block-chat";
 }

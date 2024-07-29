@@ -145,7 +145,7 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                                           ),
                                           height: 30.h,
                                           width: 30.w,
-                                       fit: BoxFit.cover,
+                                          fit: BoxFit.cover,
                                           imageUrl: ApiUrl.imageUrl + widget.listDataModel.image.toString(),
                                           placeholder: (a, b) => const Center(
                                             child: CircularProgressIndicator(),
@@ -238,7 +238,7 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      SizedBox(height: 15.h),
+                      SizedBox(height: 10.h),
                       GestureDetector(
                         onTap: () {
                           showDialog(
@@ -260,8 +260,11 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                             },
                           );
                         },
-                        child: Text(
-                          state.selectedOralLevelLanguage == null ? "Choose your oral skill level" : state.selectedOralLevelLanguage.title.toString(),
+                        child: SizedBox(
+                          height: 40.h,
+                          child:
+                          Text(
+                          state.selectedOralLevelLanguage.title == "" ? "Choose your oral skill level" : state.selectedOralLevelLanguage.title.toString(),
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: hintColor,
@@ -271,8 +274,7 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                      ),
-                      SizedBox(height: 20.h),
+                      ),),
                       Divider(
                         color: dividerCl,
                         height: 1.h,
@@ -312,8 +314,10 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                             },
                           );
                         },
-                        child: Text(
-                          state.selectedWrittenLevelLanguage == null ? "Choose your speaking skill level" : state.selectedWrittenLevelLanguage.title.toString(),
+                        child: SizedBox(
+                          height: 40.h,
+                          child:Text(
+                          state.selectedWrittenLevelLanguage.title == "" ? "Choose your speaking skill level" : state.selectedWrittenLevelLanguage.title.toString(),
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             color: hintColor,
@@ -323,11 +327,10 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                      ),
+                      ),),
                     ],
                   ),
                 ),
-                SizedBox(height: 15.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.w),
                   child: Text(
@@ -356,9 +359,9 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                       onPressed: () {
                         if (state.selectedLanguage == null) {
                           errorToast(context, "Selected Language");
-                        } else if (state.selectedOralLevelLanguage == null) {
+                        } else if (state.selectedOralLevelLanguage.title == "") {
                           errorToast(context, "Selected Oral Level");
-                        } else if (state.selectedOralLevelLanguage == null) {
+                        } else if (state.selectedOralLevelLanguage.title == "") {
                           errorToast(context, "Selected Written Level");
                         } else {
                           if (widget.isEdit) {

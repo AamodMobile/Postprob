@@ -66,13 +66,10 @@ class LoginProvider extends ChangeNotifier {
             jsonEncode(apiResponse.toJson()),
           );
           await pref.setString('currentToken', apiResponse.accessToken.toString());
-          Navigator.pushAndRemoveUntil(
-              context,
-              createRightToLeftRoute(const DashboardView(
-                index: 0,
-              )),
-              (route) => false);
-          successToast(context, json["message"]);
+          if (context.mounted) {
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const DashboardView(index: 0)), (route) => false);
+            successToast(context, json["message"]);
+          }
         } else {
           closeProgress(context);
           errorToast(context, json["message"]);

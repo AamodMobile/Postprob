@@ -21,6 +21,7 @@ class SuccessModel {
     this.createdAt,
     this.id,
     this.jobDetail,
+
   });
 
   factory SuccessModel.fromJson(Map<String, dynamic> json) => SuccessModel(
@@ -32,6 +33,7 @@ class SuccessModel {
     createdAt: json["created_at"] ,
     id: json["id"],
     jobDetail: json["job_detail"] == null ? null : PostListModel.fromJson(json["job_detail"]),
+
   );
 
   Map<String, dynamic> toJson() => {

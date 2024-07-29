@@ -12,13 +12,15 @@ class SettingProvider extends ChangeNotifier {
   TextEditingController confirmPassword = TextEditingController();
   int isNotification = 0;
   bool isHide = true;
+
   void isShow(bool show) {
     isHide = show;
     notifyListeners();
   }
-  void updateNotification(int value, BuildContext context) {
+
+  void updateNotification(int value, BuildContext context, bool isFast) {
     isNotification = value;
-    manageNotification(context, isNotification.toString());
+    manageNotification(context, isNotification.toString(), isFast);
     notifyListeners();
   }
 
@@ -74,23 +76,31 @@ class SettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> manageNotification(BuildContext context, String isOn) async {
+  Future<void> manageNotification(BuildContext context, String isOn, bool isFast) async {
     try {
-      showProgress(context);
+      if (isFast == false) {
+        showProgress(context);
+      }
       var result = await ApiService.manageNotification(isOn);
       var json = jsonDecode(result.body);
       if (context.mounted) {
         if (json["status"] == true) {
-          closeProgress(context);
-          successToast(context, json["message"].toString());
+          if (isFast == false) {
+            closeProgress(context);
+            successToast(context, json["message"].toString());
+          }
         } else {
-          closeProgress(context);
-          errorToast(context, json["message"].toString());
+          if (isFast == false) {
+            closeProgress(context);
+            errorToast(context, json["message"].toString());
+          }
         }
       }
     } catch (e) {
       if (context.mounted) {
-        closeProgress(context);
+        if (isFast == false) {
+          closeProgress(context);
+        }
         Log.console(e.toString());
       }
     }

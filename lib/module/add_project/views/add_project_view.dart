@@ -20,6 +20,7 @@ class _AddProjectViewState extends State<AddProjectView> {
   @override
   void initState() {
     addPostProvider = context.read<AddPostProvider>();
+    addPostProvider.reset();
     addPostProvider.getCategoryList(context).then((value) {
       addPostProvider.filteredList = addPostProvider.categoryList;
     });

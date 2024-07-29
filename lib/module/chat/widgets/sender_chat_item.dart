@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/chat/models/message_list_model.dart';
+import 'package:postprob/services/api_url.dart';
 
 class SenderChatItem extends StatefulWidget {
   final MessageListModel messageListModel;
@@ -18,7 +20,7 @@ class _SenderChatItemState extends State<SenderChatItem> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(
-          margin: EdgeInsets.only(left: 94.w),
+          margin: EdgeInsets.only(left: 64.w),
           decoration: BoxDecoration(
             color: mainColor,
             borderRadius: BorderRadius.only(
@@ -33,53 +35,120 @@ class _SenderChatItemState extends State<SenderChatItem> {
             vertical: 10,
           ),
           child: widget.file
-              ? Row(
-                  children: [
-                    Image.asset(
-                      pdfIc,
-                      height: 44.h,
-                      width: 44.w,
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.messageListModel.message.toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: medium,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.sp,
-                            ),
+              ? widget.messageListModel.filePath?.length == 1
+                  ? Row(
+                      children: [
+                        widget.messageListModel.filePath!.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(8.dm),
+                                child: CachedNetworkImage(
+                                  errorWidget: (context, url, error) => Image.asset(
+                                    pdfIc,
+                                    height: 44.h,
+                                    width: 44.w,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  height: 44.h,
+                                  width: 44.w,
+                                  fit: BoxFit.cover,
+                                  imageUrl: ApiUrl.imageUrl + widget.messageListModel.filePath![0].toString(),
+                                  placeholder: (a, b) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              )
+                            : Image.asset(
+                                pdfIc,
+                                height: 44.h,
+                                width: 44.w,
+                              ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.messageListModel.message.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: medium,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                              SizedBox(height: 5.h),
+                              Text(
+                                "867 Kb PDF",
+                                style: TextStyle(
+                                  color: const Color(0xFFD0DBE0),
+                                  fontFamily: regular,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 5.h),
-                          Text(
-                            "867 Kb PDF",
-                            style: TextStyle(
-                              color: const Color(0xFFD0DBE0),
-                              fontFamily: regular,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12.sp,
-                            ),
+                        ),
+                        SizedBox(width: 15.w),
+                        Image.asset(
+                          optionsIc,
+                          height: 24.h,
+                          width: 24.w,
+                          color: Colors.white,
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Image.asset(
+                          pdfIc,
+                          height: 44.h,
+                          width: 44.w,
+                        ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.messageListModel.message.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: medium,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                              SizedBox(height: 5.h),
+                              Text(
+                                "867 Kb PDF",
+                                style: TextStyle(
+                                  color: const Color(0xFFD0DBE0),
+                                  fontFamily: regular,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 15.w),
-                    Image.asset(
-                      optionsIc,
-                      height: 24.h,
-                      width: 24.w,
-                      color: Colors.white,
-                    ),
-                  ],
-                )
+                        ),
+                        SizedBox(width: 15.w),
+                        Image.asset(
+                          optionsIc,
+                          height: 24.h,
+                          width: 24.w,
+                          color: Colors.white,
+                        ),
+                      ],
+                    )
               : Text(
                   widget.messageListModel.message.toString(),
                   style: TextStyle(

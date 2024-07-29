@@ -145,27 +145,32 @@ class _YourApplicationViewState extends State<YourApplicationView> {
                                   width: 40.w,
                                   padding: const EdgeInsets.all(8),
                                   decoration: const BoxDecoration(color: Color(0xFFF5F5F5), shape: BoxShape.circle),
-                                  child: state.applyJobDetails.jobDetail!.image != ""
-                                      ? CachedNetworkImage(
-                                          errorWidget: (context, url, error) => Image.asset(
-                                            appleIc,
-                                            height: 40.h,
-                                            width: 40.w,
-                                            fit: BoxFit.contain,
-                                          ),
-                                          height: 40.h,
-                                          width: 40.w,
-                                       fit: BoxFit.cover,
-                                          imageUrl: ApiUrl.imageUrl + state.applyJobDetails.jobDetail!.image.toString(),
-                                          placeholder: (a, b) => const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        )
-                                      : Image.asset(googleIc),
+                                  child:  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.dm),
+                                    child:  state.applyJobDetails.jobDetail!.files != null && state.applyJobDetails.jobDetail!.files!.isNotEmpty
+                                        ? CachedNetworkImage(
+                                      errorWidget: (context, url, error) => Image.asset(
+                                        videoDemoImg,
+                                        height: 40.h,
+                                        width: 40.w,
+                                        fit: BoxFit.contain,
+                                      ),
+                                      height: 40.h,
+                                      width: 40.w,
+                                      fit: BoxFit.contain,
+                                      imageUrl:ApiUrl.imageUrl + state.applyJobDetails.jobDetail!.files![0].file.toString(),
+                                      placeholder: (a, b) => const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                        : Image.asset(
+                                      itTypeIc,
+                                      height: 40.h,
+                                      width: 40.w,
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
+                                SizedBox(height: 10.h),
                                 Text(
                                   state.applyJobDetails.jobDetail!.title.toString(),
                                   textAlign: TextAlign.center,

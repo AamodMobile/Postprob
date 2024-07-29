@@ -156,6 +156,7 @@ class _ChatViewState extends State<ChatView> {
                           itemBuilder: (BuildContext context, int index) {
                             return InkWell(
                               onTap: () {
+                                chatListProvider.readAllMessages(context, state.chatList[index].eventId.toString());
                                 Navigator.push(
                                     context,
                                     createRightToLeftRoute(MessageView(
@@ -283,6 +284,13 @@ class _ChatViewState extends State<ChatView> {
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
+                                              )
+                                            : const SizedBox(),
+                                        state.chatList[index].isMute.toString() == "1"
+                                            ? Icon(
+                                                Icons.volume_off,
+                                                size: state.isMute == "0" ? 16.sp : 18.sp,
+                                                color: smallTextCl,
                                               )
                                             : const SizedBox(),
                                       ],

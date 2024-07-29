@@ -181,25 +181,30 @@ class _SaveViewState extends State<SaveView> {
                                               width: 40.w,
                                               padding: const EdgeInsets.all(5),
                                               decoration: const BoxDecoration(color: Color(0xFFD6CDFE), shape: BoxShape.circle),
-                                              child: state.savePostList[index].user!.image != ""
-                                                  ? ClipRRect(
-                                                  borderRadius: BorderRadius.circular(20.dm),
-                                                  child:CachedNetworkImage(
-                                                      errorWidget: (context, url, error) => Image.asset(
-                                                        demoUser,
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(20.dm),
+                                                child:   state.savePostList[index].files != null &&   state.savePostList[index].files!.isNotEmpty
+                                                    ? CachedNetworkImage(
+                                                        errorWidget: (context, url, error) => Image.asset(
+                                                          videoDemoImg,
+                                                          height: 40.h,
+                                                          width: 40.w,
+                                                          fit: BoxFit.contain,
+                                                        ),
                                                         height: 40.h,
                                                         width: 40.w,
-                                                        fit: BoxFit.cover,
+                                                        fit: BoxFit.contain,
+                                                        imageUrl: ApiUrl.imageUrl +  state.savePostList[index].files![0].file.toString(),
+                                                        placeholder: (a, b) => const Center(
+                                                          child: CircularProgressIndicator(),
+                                                        ),
+                                                      )
+                                                    : Image.asset(
+                                                        itTypeIc,
+                                                        height: 40.h,
+                                                        width: 40.w,
                                                       ),
-                                                      height: 40.h,
-                                                      width: 40.w,
-                                                   fit: BoxFit.cover,
-                                                      imageUrl: ApiUrl.imageUrl + state.savePostList[index].user!.image.toString(),
-                                                      placeholder: (a, b) => const Center(
-                                                        child: CircularProgressIndicator(),
-                                                      ),
-                                                    ),)
-                                                  : Image.asset(appleIc),
+                                              ),
                                             ),
                                             SizedBox(
                                               height: 10.h,
@@ -218,7 +223,7 @@ class _SaveViewState extends State<SaveView> {
                                               ),
                                             ),
                                             Text(
-                                              "Google inc . California, USA",
+                                              state.savePostList[index].city!.title.toString(),
                                               textAlign: TextAlign.center,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,

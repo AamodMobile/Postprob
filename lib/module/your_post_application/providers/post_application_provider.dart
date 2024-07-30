@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/your_application/models/applied_jobs_model.dart';
 import 'package:postprob/module/your_post_application/models/my_post_job_details_model.dart';

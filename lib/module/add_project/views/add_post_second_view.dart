@@ -1,11 +1,11 @@
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/add_project/providers/add__post_provider.dart';
-import 'package:postprob/module/add_project/views/shared_job_view.dart';
 import 'package:postprob/module/add_project/widgets/choose_problem_type_sheet.dart';
 import 'package:postprob/module/add_project/widgets/problem_location_sheet.dart';
 
 class AddPostSecondView extends StatefulWidget {
   final String id;
+
   const AddPostSecondView({super.key, required this.id});
 
   @override
@@ -14,7 +14,6 @@ class AddPostSecondView extends StatefulWidget {
 
 class _AddPostSecondViewState extends State<AddPostSecondView> {
   String problemTittle = "";
-  String typeOfWork = "";
   late AddPostProvider addPostProvider;
 
   @override
@@ -93,82 +92,82 @@ class _AddPostSecondViewState extends State<AddPostSecondView> {
                       ),
                     ),
                     SizedBox(height: 30.h),
-                    /* GestureDetector(
-                  onTap: () async {
-                    var result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const JobPositionSearchView()),
-                    );
-                    if (result != null) {
-                      setState(() {
-                        problemTittle = result;
-                      });
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 23.h),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15.dm),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                  /*  GestureDetector(
+                      onTap: () async {
+                        var result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const JobPositionSearchView()),
+                        );
+                        if (result != null) {
+                          setState(() {
+                            problemTittle = result;
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 23.h),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15.dm),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Problem is for?*",
-                              style: TextStyle(
-                                color: mediumTextCl,
-                                fontFamily: medium,
-                                fontSize: 14.sp,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w700,
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Problem is for?*",
+                                  style: TextStyle(
+                                    color: mediumTextCl,
+                                    fontFamily: medium,
+                                    fontSize: 14.sp,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const Spacer(),
+                                GestureDetector(
+                                  onTap: () async {
+                                    var result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (_) => const JobPositionSearchView()),
+                                    );
+                                    if (result != null) {
+                                      setState(() {
+                                        problemTittle = result;
+                                      });
+                                    }
+                                  },
+                                  child: Image.asset(
+                                    problemTittle == "" ? addCircleIc : editIc,
+                                    height: 24.h,
+                                    width: 24.w,
+                                    color: yellowDark,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () async {
-                                var result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const JobPositionSearchView()),
-                                );
-                                if (result != null) {
-                                  setState(() {
-                                    problemTittle = result;
-                                  });
-                                }
-                              },
-                              child: Image.asset(
-                                problemTittle == "" ? addCircleIc : editIc,
-                                height: 24.h,
-                                width: 24.w,
-                                color: yellowDark,
-                              ),
-                            ),
+                            problemTittle == ""
+                                ? const SizedBox()
+                                : Column(
+                                    children: [
+                                      SizedBox(height: 10.h),
+                                      Text(
+                                        problemTittle,
+                                        style: TextStyle(
+                                          color: smallTextCl,
+                                          fontFamily: regular,
+                                          fontSize: 14.sp,
+                                          fontStyle: FontStyle.normal,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  )
                           ],
                         ),
-                        problemTittle == ""
-                            ? const SizedBox()
-                            : Column(
-                                children: [
-                                  SizedBox(height: 10.h),
-                                  Text(
-                                    problemTittle,
-                                    style: TextStyle(
-                                      color: smallTextCl,
-                                      fontFamily: regular,
-                                      fontSize: 14.sp,
-                                      fontStyle: FontStyle.normal,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              )
-                      ],
-                    ),
-                  ),
-                ),*/
+                      ),
+                    ),*/
                     SizedBox(height: 10.h),
                     GestureDetector(
                       onTap: () async {
@@ -233,7 +232,11 @@ class _AddPostSecondViewState extends State<AddPostSecondView> {
                     SizedBox(height: 10.h),
                     GestureDetector(
                       onTap: () async {
-                        await ProblemLocationSheet().show(context,state);
+                        if (state.locationId == "") {
+                          await ProblemLocationSheet().show(context, state);
+                        } else {
+                          errorToast(context, "If You want to change then contact support");
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 23.h),
@@ -259,7 +262,11 @@ class _AddPostSecondViewState extends State<AddPostSecondView> {
                                 const Spacer(),
                                 GestureDetector(
                                   onTap: () async {
-                                    await ProblemLocationSheet().show(context,state);
+                                    if (state.locationId == "") {
+                                      await ProblemLocationSheet().show(context, state);
+                                    } else {
+                                      errorToast(context, "If You want to change then contact support");
+                                    }
                                   },
                                   child: Image.asset(
                                     state.locationId == "" ? addCircleIc : editIc,

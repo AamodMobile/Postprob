@@ -12,8 +12,9 @@ class AddLanguageView extends StatefulWidget {
   final String id;
   String? oral;
   String? writing;
+  bool? isPrimary;
 
-  AddLanguageView({super.key, required this.listDataModel, required this.isEdit, this.oral, this.writing, required this.id});
+  AddLanguageView({super.key, required this.listDataModel, required this.isEdit, this.oral, this.writing,this.isPrimary, required this.id});
 
   @override
   State<AddLanguageView> createState() => _AddLanguageViewState();
@@ -31,6 +32,7 @@ class _AddLanguageViewState extends State<AddLanguageView> {
         profileProvider.selectedLanguage = widget.listDataModel;
         profileProvider.selectedOralLevelLanguage.title = widget.oral;
         profileProvider.selectedWrittenLevelLanguage.title = widget.writing;
+        profileProvider.isPrimaryLanguage = widget.isPrimary!;
         for (var c in profileProvider.languageLevelList) {
           if (c.title == profileProvider.selectedOralLevelLanguage.title) {
             profileProvider.selectedOralLevelLanguage.id = c.id;
@@ -262,19 +264,19 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                         },
                         child: SizedBox(
                           height: 40.h,
-                          child:
-                          Text(
-                          state.selectedOralLevelLanguage.title == "" ? "Choose your oral skill level" : state.selectedOralLevelLanguage.title.toString(),
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: hintColor,
-                            fontFamily: regular,
-                            fontSize: 12.sp,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w400,
+                          child: Text(
+                            state.selectedOralLevelLanguage.title == "" ? "Choose your oral skill level" : state.selectedOralLevelLanguage.title.toString(),
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: hintColor,
+                              fontFamily: regular,
+                              fontSize: 12.sp,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
-                      ),),
+                      ),
                       Divider(
                         color: dividerCl,
                         height: 1.h,
@@ -316,18 +318,19 @@ class _AddLanguageViewState extends State<AddLanguageView> {
                         },
                         child: SizedBox(
                           height: 40.h,
-                          child:Text(
-                          state.selectedWrittenLevelLanguage.title == "" ? "Choose your speaking skill level" : state.selectedWrittenLevelLanguage.title.toString(),
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: hintColor,
-                            fontFamily: regular,
-                            fontSize: 12.sp,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w400,
+                          child: Text(
+                            state.selectedWrittenLevelLanguage.title == "" ? "Choose your speaking skill level" : state.selectedWrittenLevelLanguage.title.toString(),
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: hintColor,
+                              fontFamily: regular,
+                              fontSize: 12.sp,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
-                      ),),
+                      ),
                     ],
                   ),
                 ),

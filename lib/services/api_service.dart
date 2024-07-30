@@ -47,6 +47,7 @@ class ApiService {
     return response;
   }
 
+  ///getHomeDataApi
   static Future<http.Response> getHomeDataApi() async {
     http.Response response;
     var instance = await SharedPreferences.getInstance();
@@ -957,11 +958,12 @@ class ApiService {
     );
     return response;
   }
+
   static Future<http.Response> blockChat(
-      String channelId,
-      String recipientId,
-      String isBlock,
-      ) async {
+    String channelId,
+    String recipientId,
+    String isBlock,
+  ) async {
     http.Response response;
     var instance = await SharedPreferences.getInstance();
     var token = instance.getString('currentToken');

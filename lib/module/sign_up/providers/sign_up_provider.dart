@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/add_project/models/cities_model.dart';
 import 'package:postprob/module/dashboard/view/dashboard_view.dart';
@@ -26,6 +28,7 @@ class SignUpProvider extends ChangeNotifier {
   var cityModel;
   var cityList = <CitiesModel>[];
   bool isHide = true;
+
   void reset() {
     password.clear();
     emailController.clear();
@@ -57,14 +60,15 @@ class SignUpProvider extends ChangeNotifier {
     name.text = nameT;
     notifyListeners();
   }
+
   void isShow(bool show) {
     isHide = show;
     notifyListeners();
   }
+
   String? emailValidator(value) {
     const pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
     final regExp = RegExp(pattern);
-
     if (value!.isEmpty) {
       return 'Enter an email';
     } else if (!regExp.hasMatch(
@@ -105,10 +109,7 @@ class SignUpProvider extends ChangeNotifier {
         if (json["status"] == true) {
           closeProgress(context);
           var pref = await SharedPreferences.getInstance();
-          await pref.setString(
-            'currentUser',
-            jsonEncode(apiResponse.toJson()),
-          );
+          await pref.setString('currentUser', jsonEncode(apiResponse.toJson()));
           await pref.setString('currentToken', apiResponse.accessToken.toString());
           if (context.mounted) {
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const DashboardView(index: 0)), (route) => false);
@@ -146,7 +147,6 @@ class SignUpProvider extends ChangeNotifier {
     try {
       await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position) {
         _currentPosition = position;
-
         _getAddressFromLatLng(_currentPosition!);
       }).catchError((e) {
         debugPrint("$e");
@@ -160,7 +160,6 @@ class SignUpProvider extends ChangeNotifier {
     try {
       await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
         Placemark place = placemarks[0];
-
         currentAddress = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}';
         pincode = '${place.postalCode}';
         city = '${place.locality}';
@@ -174,6 +173,17 @@ class SignUpProvider extends ChangeNotifier {
       Log.console(e.toString());
     }
   }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    Log.console(credential);
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 }
 
 class LocationStatus {
@@ -184,7 +194,6 @@ class LocationStatus {
     if (!serviceEnabled) {
       return Future.error('Please enable your location, it seems to be turned off.');
     }
-
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();

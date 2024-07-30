@@ -141,7 +141,7 @@ class _AddPostViewState extends State<AddPostView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  profileState.profileModel.name.toString(),
+                                  profileState.profileModel.name ?? "",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     color: mediumTextCl,
@@ -153,7 +153,7 @@ class _AddPostViewState extends State<AddPostView> {
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
-                                  profileState.profileModel.citystate.toString(),
+                                  profileState.profileModel.citystate ?? "",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     color: smallTextCl,
@@ -343,9 +343,7 @@ class _AddPostViewState extends State<AddPostView> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 15.h,
-                      )
+                      SizedBox(height: 15.h)
                     ],
                   )
                 ],

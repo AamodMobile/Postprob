@@ -6,6 +6,7 @@ import 'package:postprob/module/add_project/models/cities_model.dart';
 import 'package:postprob/module/add_project/models/success_post_job_model.dart';
 import 'package:postprob/module/add_project/views/shared_job_view.dart';
 import 'package:postprob/module/profile/models/list_data_model.dart';
+import 'package:postprob/module/profile/providers/profile_provider.dart';
 import 'package:postprob/services/api_logs.dart';
 import 'package:postprob/services/api_service.dart';
 
@@ -122,8 +123,18 @@ class AddPostProvider extends ChangeNotifier {
       cityList.clear();
       var result = await ApiService.cities();
       var json = jsonDecode(result.body);
-      if (json["status"] == true) {
-        cityList = List<CitiesModel>.from(json['data'].map((i) => CitiesModel.fromJson(i))).toList(growable: true);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          cityList = List<CitiesModel>.from(json['data'].map((i) => CitiesModel.fromJson(i))).toList(growable: true);
+          final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+          for (var c in cityList) {
+            if (c.id == profileProvider.profileModel.cityId) {
+              locationId = c.id.toString();
+              locationTittle = c.title.toString();
+              break;
+            }
+          }
+        }
       } else {
         if (context.mounted) {
           errorToast(context, json["status"].toString());

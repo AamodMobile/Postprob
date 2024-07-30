@@ -108,7 +108,7 @@ class _LoginViewState extends State<LoginView> {
                           }
                         },
                         child: Image.asset(
-                          state.isHide ?phEyeIc: iconEyeHideIc  ,
+                          state.isHide ? phEyeIc : iconEyeHideIc,
                           height: 24.h,
                           width: 24.w,
                         ),
@@ -183,7 +183,9 @@ class _LoginViewState extends State<LoginView> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.03),
                       child: CustomButtonWidget(
-                        onPressed: () {},
+                        onPressed: () {
+                          state.signInWithGoogle();
+                        },
                         text: "Sign in with Google",
                         style: CustomButtonStyle.style2,
                         iconWidget: Image.asset(

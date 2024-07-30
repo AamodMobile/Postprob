@@ -4,6 +4,7 @@ import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/dashboard/view/dashboard_view.dart';
 import 'package:postprob/module/intro/view/intro_view.dart';
 import 'package:postprob/module/login/model/user_model.dart';
+import 'package:postprob/services/api_logs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashView extends StatefulWidget {
@@ -37,13 +38,14 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  _navigator() async {
+ void _navigator() async {
     var instance = await SharedPreferences.getInstance();
     var crtData = instance.getString('currentUser');
     await Future.delayed(const Duration(seconds: 3)).then(
       (value) {
         if (crtData != null) {
           UserModel crtUser = UserModel.fromJson(jsonDecode(crtData));
+          Log.console(crtUser.dataUser?.name.toString());
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const DashboardView(index: 0)), (route) => false);
         } else {
           Navigator.pushAndRemoveUntil(context, createRightToLeftRoute(const IntroView()), (route) => false);

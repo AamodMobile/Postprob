@@ -24,31 +24,31 @@ import 'package:postprob/module/your_application/providers/applied_job_provider.
 import 'package:postprob/module/your_post_application/providers/post_application_provider.dart';
 import 'package:postprob/services/api_logs.dart';
 import 'package:rxdart/rxdart.dart';
+
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
 final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject = BehaviorSubject<ReceivedNotification>();
-
 final BehaviorSubject<String?> selectNotificationSubject = BehaviorSubject<String?>();
 
 class ReceivedNotification {
+  final int id;
+  final String? title;
+  final String? body;
+  final String? payload;
+
   ReceivedNotification({
     required this.id,
     required this.title,
     required this.body,
     required this.payload,
   });
-
-  final int id;
-  final String? title;
-  final String? body;
-  final String? payload;
 }
 
 String? selectedNotificationPayload;
 
 Future<void> backgroundHandler(RemoteMessage message) async {
-  Log.console('main.dart backgroundHandler');
+  Log.console('main.dart backgroundHandler$message');
 }
+
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
@@ -60,7 +60,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     Log.console('Got a message whilst in the foreground!');
     Log.console('Message data: ${message.data}');
@@ -68,9 +67,7 @@ Future<void> main() async {
       Log.console('Message also contained a notification: ${message.notification}');
     }
   });
-
   var initializationSettingsAndroid = const AndroidInitializationSettings('@mipmap/ic_launcher');
-
   final DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
     requestAlertPermission: true,
     requestBadgePermission: true,
@@ -79,22 +76,17 @@ Future<void> main() async {
       didReceiveLocalNotificationSubject.add(ReceivedNotification(id: id, title: title, body: body, payload: payload));
     },
   );
-
   final InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
     iOS: initializationSettingsIOS,
   );
-
   await flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: (payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: $payload');
-    }
-    if (payload != null && payload.toString() != reminder) {
-    } else if (payload != null && payload.toString() == reminder) {}
+    debugPrint('notification payload: $payload');
+    if (payload.toString() != reminder) {
+    } else if (payload.toString() == reminder) {}
     selectedNotificationPayload = payload.toString();
     selectNotificationSubject.add(payload as String?);
   });
-
   NotificationHelper().initializeNotification();
   runApp(const MyApp());
   HttpOverrides.global = MyHttpOverrides();

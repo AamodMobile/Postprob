@@ -1,8 +1,4 @@
-import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
 import 'package:postprob/module/profile/providers/profile_provider.dart';
@@ -15,43 +11,12 @@ class AddDocumentsView extends StatefulWidget {
 }
 
 class _AddDocumentsViewState extends State<AddDocumentsView> {
-  String? selectedFilePath;
-  int? fileSize;
-  DateTime? fileDate;
   late ProfileProvider profileProvider;
-
-  Future<void> uploadPDFFile(BuildContext context) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-
-    if (result != null) {
-      setState(() {
-        selectedFilePath = result.files.single.path;
-        fileSize = File(selectedFilePath!).lengthSync();
-        fileDate = File(selectedFilePath!).lastModifiedSync();
-      });
-    } else {
-      errorToast(context, "File Not Picked");
-    }
-  }
-
-  void removeSelectedFile() {
-    setState(() {
-      selectedFilePath = null;
-      fileSize = null;
-      fileDate = null;
-    });
-  }
-
-  String formatDateTime(DateTime dateTime) {
-    return DateFormat('dd MMM yyyy \'at\' hh:mm a').format(dateTime);
-  }
 
   @override
   void initState() {
     profileProvider = context.read<ProfileProvider>();
+    profileProvider.userGetProfile(context);
     super.initState();
   }
 
@@ -90,6 +55,128 @@ class _AddDocumentsViewState extends State<AddDocumentsView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Visibility(
+                      visible: state.profileModel.documents != null && state.profileModel.documents!.isNotEmpty ? true : false,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20.h),
+                          Text(
+                            "Your Documents",
+                            style: TextStyle(
+                              color: mediumTextCl,
+                              fontFamily: medium,
+                              fontSize: 14.sp,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          MediaQuery.removePadding(
+                            context: context,
+                            removeTop: true,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: state.profileModel.documents?.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Column(
+                                  children: [
+                                    SizedBox(height: 20.h),
+                                    DottedBorder(
+                                      color: const Color(0xFF9D97B5),
+                                      strokeWidth: 1,
+                                      borderType: BorderType.RRect,
+                                      padding: EdgeInsets.zero,
+                                      radius: Radius.circular(20.dm),
+                                      dashPattern: const [3, 3],
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 15.w),
+                                        width: MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20.dm),
+                                          color: const Color.fromRGBO(63, 19, 228, 0.05),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Image.asset(
+                                                  pdfIc,
+                                                  height: 44.h,
+                                                  width: 44.w,
+                                                ),
+                                                SizedBox(width: 15.w),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        state.profileModel.documents![index].title.toString(),
+                                                        textAlign: TextAlign.start,
+                                                        style: TextStyle(
+                                                          color: mediumTextCl,
+                                                          fontFamily: regular,
+                                                          fontSize: 12.sp,
+                                                          fontStyle: FontStyle.normal,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 5.h),
+                                                      Text(
+                                                        '',
+                                                        textAlign: TextAlign.start,
+                                                        style: TextStyle(
+                                                          color: hintColor,
+                                                          fontFamily: regular,
+                                                          fontSize: 12.sp,
+                                                          fontStyle: FontStyle.normal,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 20.h),
+                                            GestureDetector(
+                                              onTap: () {
+                                                state.deleteUserDocument(context, state.profileModel.documents![index].id.toString());
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Image.asset(
+                                                    deleteIc,
+                                                    height: 24.h,
+                                                    width: 24.w,
+                                                    color: redCl,
+                                                  ),
+                                                  SizedBox(width: 15.w),
+                                                  Text(
+                                                    "Remove file",
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      color: redCl,
+                                                      fontFamily: medium,
+                                                      fontSize: 12.sp,
+                                                      fontStyle: FontStyle.normal,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      )),
                   SizedBox(height: 30.h),
                   Text(
                     "Add Documents",
@@ -102,10 +189,10 @@ class _AddDocumentsViewState extends State<AddDocumentsView> {
                     ),
                   ),
                   SizedBox(height: 30.h),
-                  selectedFilePath == null
+                  state.selectedFilePath == null
                       ? GestureDetector(
                           onTap: () {
-                            uploadPDFFile(context);
+                            state.uploadPDFFile(context);
                           },
                           child: DottedBorder(
                             color: const Color(0xFF9D97B5),
@@ -173,7 +260,7 @@ class _AddDocumentsViewState extends State<AddDocumentsView> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            selectedFilePath!.split('/').last,
+                                            state.selectedFilePath!.split('/').last,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                               color: mediumTextCl,
@@ -185,7 +272,7 @@ class _AddDocumentsViewState extends State<AddDocumentsView> {
                                           ),
                                           SizedBox(height: 5.h),
                                           Text(
-                                            '${(fileSize! / 1024).toStringAsFixed(2)} KB • ${formatDateTime(fileDate!)}',
+                                            '${(state.fileSize! / 1024).toStringAsFixed(2)} KB • ${state.formatDateTime(state.fileDate!)}',
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                               color: hintColor,
@@ -202,7 +289,7 @@ class _AddDocumentsViewState extends State<AddDocumentsView> {
                                 ),
                                 SizedBox(height: 20.h),
                                 GestureDetector(
-                                  onTap: removeSelectedFile,
+                                  onTap: state.removeSelectedFile,
                                   child: Row(
                                     children: [
                                       Image.asset(
@@ -241,6 +328,7 @@ class _AddDocumentsViewState extends State<AddDocumentsView> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
+                  SizedBox(height: 80.h),
                 ],
               ),
             ),
@@ -254,15 +342,15 @@ class _AddDocumentsViewState extends State<AddDocumentsView> {
                   children: [
                     CustomButtonWidget(
                       onPressed: () {
-                        if (selectedFilePath != null) {
-                          state.addUserDocumentsApi(context, "", selectedFilePath!.split('/').last, selectedFilePath.toString());
+                        if (state.selectedFilePath != null) {
+                          state.addUserDocumentsApi(context, "", state.selectedFilePath!.split('/').last, state.selectedFilePath.toString());
                         } else {
                           errorToast(context, "Select Document");
                         }
                       },
                       text: "SAVE".toUpperCase(),
                     ),
-                    SizedBox(height: 70.h)
+                    SizedBox(height: 20.h)
                   ],
                 ),
               ],

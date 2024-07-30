@@ -26,7 +26,6 @@ class _CheckMailViewState extends LifecycleAwareState<CheckMailView> {
 
   @override
   void onAppResume() {
-    // Navigate to the next screen
     Navigator.push(context, MaterialPageRoute(builder: (_) => const SuccessFullyUpdateView()));
   }
 

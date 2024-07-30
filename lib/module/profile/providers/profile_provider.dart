@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/profile/models/level_list_model.dart';
 import 'package:postprob/module/profile/models/list_data_model.dart';
@@ -29,11 +32,41 @@ class ProfileProvider extends ChangeNotifier {
   DateTime? _startDate;
   DateTime? _endDate;
   var selectedLanguage;
-  LevelListModel selectedOralLevelLanguage=LevelListModel();
-  LevelListModel selectedWrittenLevelLanguage=LevelListModel();
+  LevelListModel selectedOralLevelLanguage = LevelListModel();
+  LevelListModel selectedWrittenLevelLanguage = LevelListModel();
   TextEditingController searchLanguage = TextEditingController();
   bool isPrimaryLanguage = true;
   ProfileModel profileModel = ProfileModel();
+  String? selectedFilePath;
+  int? fileSize;
+  DateTime? fileDate;
+
+  Future<void> uploadPDFFile(BuildContext context) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      selectedFilePath = result.files.single.path;
+      fileSize = File(selectedFilePath!).lengthSync();
+      fileDate = File(selectedFilePath!).lastModifiedSync();
+    } else {
+      errorToast(context, "File Not Picked");
+    }
+    notifyListeners();
+  }
+
+  void removeSelectedFile() {
+    selectedFilePath = null;
+    fileSize = null;
+    fileDate = null;
+    notifyListeners();
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    return DateFormat('dd MMM yyyy \'at\' hh:mm a').format(dateTime);
+  }
 
   void setSearchLanguage(String search) {
     searchLanguage.text = search;
@@ -72,8 +105,8 @@ class ProfileProvider extends ChangeNotifier {
     endDateStudy.text = "";
     educationDescription.text = "";
     about.text = "";
-    selectedOralLevelLanguage = LevelListModel(id: 0,title: "",slug: "");
-    selectedWrittenLevelLanguage = LevelListModel(id: 0,title: "",slug: "");
+    selectedOralLevelLanguage = LevelListModel(id: 0, title: "", slug: "");
+    selectedWrittenLevelLanguage = LevelListModel(id: 0, title: "", slug: "");
     searchLanguage.text = "";
     isPrimaryLanguage = false;
   }
@@ -142,8 +175,6 @@ class ProfileProvider extends ChangeNotifier {
   String _formatDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year.toString()}";
   }
-
-
 
   Future<void> getLanguageList(BuildContext context, String search) async {
     try {
@@ -269,7 +300,8 @@ class ProfileProvider extends ChangeNotifier {
           await userGetProfile(context);
           if (context.mounted) {
             Navigator.pop(context);
-            successToast(context, json["message"].toString());}
+            successToast(context, json["message"].toString());
+          }
         } else {
           closeProgress(context);
           errorToast(context, json["message"].toString());
@@ -304,7 +336,8 @@ class ProfileProvider extends ChangeNotifier {
           await userGetProfile(context);
           if (context.mounted) {
             Navigator.pop(context);
-            successToast(context, json["message"].toString());}
+            successToast(context, json["message"].toString());
+          }
         } else {
           closeProgress(context);
           errorToast(context, json["message"].toString());
@@ -333,8 +366,9 @@ class ProfileProvider extends ChangeNotifier {
           closeProgress(context);
           await userGetProfile(context);
           if (context.mounted) {
-            Navigator.pop(context);
-            successToast(context, result["message"].toString());}
+            removeSelectedFile();
+            successToast(context, result["message"].toString());
+          }
         } else {
           closeProgress(context);
           errorToast(context, result["message"].toString());
@@ -368,7 +402,8 @@ class ProfileProvider extends ChangeNotifier {
           if (context.mounted) {
             Navigator.pop(context);
             Navigator.pop(context);
-            successToast(context, json["message"].toString());}
+            successToast(context, json["message"].toString());
+          }
         } else {
           closeProgress(context);
           errorToast(context, json["message"].toString());
@@ -393,8 +428,9 @@ class ProfileProvider extends ChangeNotifier {
           closeProgress(context);
           await userGetProfile(context);
           if (context.mounted) {
-          Navigator.pop(context);
-          successToast(context, json["message"].toString());}
+            Navigator.pop(context);
+            successToast(context, json["message"].toString());
+          }
         } else {
           closeProgress(context);
           errorToast(context, json["message"].toString());
@@ -423,7 +459,8 @@ class ProfileProvider extends ChangeNotifier {
           await userGetProfile(context);
           if (context.mounted) {
             Navigator.pop(context);
-            successToast(context, json["message"].toString());}
+            successToast(context, json["message"].toString());
+          }
         } else {
           closeProgress(context);
           errorToast(context, json["message"].toString());
@@ -448,8 +485,8 @@ class ProfileProvider extends ChangeNotifier {
           closeProgress(context);
           await userGetProfile(context);
           if (context.mounted) {
-            Navigator.pop(context);
-            successToast(context, json["message"].toString());}
+            successToast(context, json["message"].toString());
+          }
         } else {
           closeProgress(context);
           errorToast(context, json["message"].toString());
@@ -475,7 +512,8 @@ class ProfileProvider extends ChangeNotifier {
           await userGetProfile(context);
           if (context.mounted) {
             Navigator.pop(context);
-            successToast(context, json["message"].toString());}
+            successToast(context, json["message"].toString());
+          }
         } else {
           closeProgress(context);
           errorToast(context, json["message"].toString());
@@ -507,9 +545,9 @@ class ProfileProvider extends ChangeNotifier {
     } catch (e) {
       if (context.mounted) {
         isLoading = false;
-       Log.console(e.toString());
-     }
-   }
+        Log.console(e.toString());
+      }
+    }
     notifyListeners();
   }
 }

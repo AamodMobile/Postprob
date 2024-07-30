@@ -122,7 +122,7 @@ class _JobDetailsViewState extends State<JobDetailsView> {
                                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                         child: Row(
                                           children: [
-                                           /* Expanded(
+                                            /* Expanded(
                                               child: Text(
                                                 "Google",
                                                 textAlign: TextAlign.center,
@@ -195,7 +195,7 @@ class _JobDetailsViewState extends State<JobDetailsView> {
                                   color: Color(0xFFAFECFE),
                                   shape: BoxShape.circle,
                                 ),
-                                child: state.postDetailsModel.user!.image != ""
+                                child: state.postDetailsModel.user != null && state.postDetailsModel.user!.image != ""
                                     ? Center(
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(30.dm),

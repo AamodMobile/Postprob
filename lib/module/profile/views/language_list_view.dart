@@ -112,13 +112,18 @@ class _LanguageListViewState extends State<LanguageListView> {
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                createRightToLeftRoute(AddLanguageView(
+                              context,
+                              createRightToLeftRoute(
+                                AddLanguageView(
                                   listDataModel: state.profileModel.languages![index].language!,
                                   isEdit: true,
+                                  isPrimary: state.profileModel.languages![index].isPrimary == 1 ? true : false,
                                   oral: state.profileModel.languages![index].oralLavel.toString(),
-                                  writing: state.profileModel.languages![index].writtenLavel.toString(), id: state.profileModel.languages![index].id.toString(),
-                                )));
+                                  writing: state.profileModel.languages![index].writtenLavel.toString(),
+                                  id: state.profileModel.languages![index].id.toString(),
+                                ),
+                              ),
+                            );
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
@@ -137,17 +142,19 @@ class _LanguageListViewState extends State<LanguageListView> {
                                       child: state.profileModel.languages![index].language!.image != ""
                                           ? CachedNetworkImage(
                                               errorWidget: (context, url, error) => Image.asset(
-                                                koreanFlag,
+                                                hindiIndianFlag,
                                                 height: 30.h,
                                                 width: 30.w,
                                                 fit: BoxFit.cover,
                                               ),
                                               height: 30.h,
                                               width: 30.w,
-                                           fit: BoxFit.cover,
+                                              fit: BoxFit.cover,
                                               imageUrl: ApiUrl.imageUrl + state.profileModel.languages![index].language!.image.toString(),
                                               placeholder: (a, b) => const Center(
-                                                child: CircularProgressIndicator(),
+                                                child: CircularProgressIndicator(
+                                                  color: mainColor,
+                                                ),
                                               ),
                                             )
                                           : Image.asset(
@@ -174,10 +181,16 @@ class _LanguageListViewState extends State<LanguageListView> {
                                     GestureDetector(
                                       onTap: () {
                                         RemoveItemSheet.show(
-                                            context, state.profileModel.languages![index].language!.title.toString(), "${state.profileModel.languages![index].language!.title.toString()} language",
-                                            () {
-                                          state.deleteUserLanguage(context, state.profileModel.languages![index].id.toString());
-                                        });
+                                          context,
+                                          state.profileModel.languages![index].language!.title.toString(),
+                                          "${state.profileModel.languages![index].language!.title.toString()} language",
+                                          () {
+                                            state.deleteUserLanguage(
+                                              context,
+                                              state.profileModel.languages![index].id.toString(),
+                                            );
+                                          },
+                                        );
                                       },
                                       child: Image.asset(
                                         deleteIc,

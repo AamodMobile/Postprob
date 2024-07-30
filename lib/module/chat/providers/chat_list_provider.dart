@@ -214,6 +214,7 @@ class ChatListProvider extends ChangeNotifier {
 
   Future<void> sendMessagePusher(BuildContext context, String msg, String recipientId, String userId) async {
     try {
+      currentPage=1;
       if (context.mounted) {
         final Map<String, dynamic> jsonData = {
           "user_id": userId,
@@ -298,6 +299,7 @@ class ChatListProvider extends ChangeNotifier {
 
   Future<void> muteChat(BuildContext context, String isMute) async {
     try {
+      currentPage = 1;
       showProgress(context);
       var result = await ApiService.muteChat(channelId, otherUserId, isMute);
       var json = jsonDecode(result.body);
@@ -323,6 +325,7 @@ class ChatListProvider extends ChangeNotifier {
 
   Future<void> blockChat(BuildContext context, String isBlock) async {
     try {
+      currentPage = 1;
       showProgress(context);
       var result = await ApiService.blockChat(channelId, otherUserId, isBlock);
       var json = jsonDecode(result.body);

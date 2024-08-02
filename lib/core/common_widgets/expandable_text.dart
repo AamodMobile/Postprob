@@ -1,5 +1,4 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 
 class ExpandableText extends StatefulWidget {

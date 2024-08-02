@@ -52,7 +52,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
                     decoration: BoxDecoration(color: primaryLightCl, borderRadius: BorderRadius.circular(6)),
                     child: Text(
                       hiddenText ? "Show more" : "Show less",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFF0D0140),
                         fontFamily: medium,
                         fontSize: 12,

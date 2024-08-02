@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -52,7 +54,9 @@ class ProfileProvider extends ChangeNotifier {
       fileSize = File(selectedFilePath!).lengthSync();
       fileDate = File(selectedFilePath!).lastModifiedSync();
     } else {
-      errorToast(context, "File Not Picked");
+      if (context.mounted) {
+        errorToast(context, "File Not Picked");
+      }
     }
     notifyListeners();
   }
@@ -289,10 +293,11 @@ class ProfileProvider extends ChangeNotifier {
     String startDate,
     String endDate,
     String description,
+    String isPosition,
   ) async {
     try {
       showProgress(context);
-      var result = await ApiService.addUserExperienceApi(userExperienceId, title, company, startDate, endDate, description);
+      var result = await ApiService.addUserExperienceApi(userExperienceId, title, company, startDate, endDate, description, isPosition);
       var json = jsonDecode(result.body);
       if (context.mounted) {
         if (json["status"] == true) {
@@ -319,16 +324,17 @@ class ProfileProvider extends ChangeNotifier {
   Future<void> addUserEducationApi(
     BuildContext context,
     String userEducationId,
-    String educationLavelId,
+    String educationLevelId,
     String institutionName,
     String fieldOfStudy,
     String startDate,
     String endDate,
     String description,
+    String isPosition,
   ) async {
     try {
       showProgress(context);
-      var result = await ApiService.addUserEducationApi(userEducationId, educationLavelId, institutionName, fieldOfStudy, startDate, endDate, description);
+      var result = await ApiService.addUserEducationApi(userEducationId, educationLevelId, institutionName, fieldOfStudy, startDate, endDate, description, isPosition);
       var json = jsonDecode(result.body);
       if (context.mounted) {
         if (json["status"] == true) {
@@ -445,10 +451,7 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> skillsAdd(
-    BuildContext context,
-    var selectedSkillsList,
-  ) async {
+  Future<void> skillsAdd(BuildContext context, var selectedSkillsList) async {
     try {
       showProgress(context);
       var result = await ApiService.skillsAdd(selectedSkillsList);

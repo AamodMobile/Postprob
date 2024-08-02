@@ -1,6 +1,6 @@
 class ApiUrl {
   static const String baseUrl = "http://meraroom.in/jobspot/public/api/";
-  static const String imageUrl = "http://meraroom.in/jobspot/public/";
+  static const String imageUrl = "https://meraroom.in/jobspot/public/";
   static const String login = "${baseUrl}auth/login";
   static const String register = "${baseUrl}auth/register";
   static const String logout = "${baseUrl}logout";

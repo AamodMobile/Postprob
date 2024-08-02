@@ -28,7 +28,7 @@ class ExitSheet {
                       Container(
                         width: 30.w,
                         height: 3.h,
-                        decoration: BoxDecoration(color: Color(0xFF5B5858), borderRadius: BorderRadius.circular(3.dm)),
+                        decoration: BoxDecoration(color: const Color(0xFF5B5858), borderRadius: BorderRadius.circular(3.dm)),
                       ),
                       SizedBox(height: 50.h),
                       Text(

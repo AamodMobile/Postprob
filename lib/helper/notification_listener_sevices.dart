@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:postprob/helper/notification_service.dart';
+import 'package:postprob/services/api_logs.dart';
 
 class NotificationListenerProvider {
   // final _firebaseMessaging = FirebaseMessaging.instance.getInitialMessage();
@@ -11,28 +12,27 @@ class NotificationListenerProvider {
 
       // AppleNotification apple = event.notification!.apple!;
       AndroidNotification androidNotification = event.notification!.android!;
+      Log.console(androidNotification);
       final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
           FlutterLocalNotificationsPlugin();
-      if (notification != null && androidNotification != null) {
-        NotificationService.showNotification(
-            title: notification.title.toString(),
-            body: notification.body.toString(),
-            fln: flutterLocalNotificationsPlugin);
+      NotificationService.showNotification(
+          title: notification.title.toString(),
+          body: notification.body.toString(),
+          fln: flutterLocalNotificationsPlugin);
 
-        ///Show local notification
-        // sendNotification(title: notification.title!, body: notification.body);
+      ///Show local notification
+      // sendNotification(title: notification.title!, body: notification.body);
 
-        ///Show Alert dialog
-        // showDialog(
-        //     context: context,
-        //     builder: (context) {
-        //       return AlertDialog(
-        //         title: Text(notification.title!),
-        //         content: Text(notification.body!),
-        //       );
-        //     });
-      }
-    });
+      ///Show Alert dialog
+      // showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return AlertDialog(
+      //         title: Text(notification.title!),
+      //         content: Text(notification.body!),
+      //       );
+      //     });
+        });
   }
 
   void getBackGroundMessage() {

@@ -143,7 +143,7 @@ class _JobDetailsViewState extends State<JobDetailsView> {
                                             ),*/
                                             Expanded(
                                               child: Text(
-                                                state.postDetailsModel.city != null ? state.postDetailsModel.city!.title.toString() : "",
+                                                state.postDetailsModel.user != null ? "${state.postDetailsModel.user!.city ?? ""},${state.postDetailsModel.user!.state ?? ""}" : "",
                                                 textAlign: TextAlign.center,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -211,7 +211,9 @@ class _JobDetailsViewState extends State<JobDetailsView> {
                                             fit: BoxFit.cover,
                                             imageUrl: ApiUrl.imageUrl + state.postDetailsModel.user!.image.toString(),
                                             placeholder: (a, b) => const Center(
-                                              child: CircularProgressIndicator(),
+                                              child: CircularProgressIndicator(
+                                                color: mainColor,
+                                              ),
                                             ),
                                           ),
                                         ),

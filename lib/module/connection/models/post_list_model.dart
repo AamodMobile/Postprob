@@ -1,3 +1,5 @@
+// ignore_for_file: equal_keys_in_map
+
 import 'package:postprob/module/chat/models/chat_list_model.dart';
 import 'package:postprob/module/connection/models/category_model.dart';
 import 'package:postprob/module/connection/models/city_model.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,9 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:postprob/module/login/view/login_view.dart';
 import 'package:postprob/services/api_logs.dart';
 
-
-
 class ApiClient {
+
   static Future getData(String url, {Map<String, String>? headers}) async {
     var result;
     Log.console('Http.Get Url: $url');
@@ -33,6 +34,7 @@ class ApiClient {
       {Map<String, String>? headers,
       Object? body,
       bool skip401 = false}) async {
+
     var result;
     Log.console('Http.Post Url: $url');
     if (headers != null) {

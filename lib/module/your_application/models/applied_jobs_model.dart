@@ -76,7 +76,7 @@ class JobDetail {
   Category? category;
   Category? workplace;
   CitiesModel? city;
-  UserModel? user;
+  User? user;
   List<FileElement>? files;
   JobDetail({
     this.id,
@@ -124,7 +124,7 @@ class JobDetail {
     category: json["category"] == null ? null : Category.fromJson(json["category"]),
     workplace: json["workplace"] == null ? null : Category.fromJson(json["workplace"]),
     city: json["city"] == null ? null : CitiesModel.fromJson(json["city"]),
-    user: json["user"] == null ? null : UserModel.fromJson(json["user"]),
+    user: json["user"] == null ? null : User.fromJson(json["user"]),
     files: json["files"] == null ? [] : List<FileElement>.from(json["files"]!.map((x) => FileElement.fromJson(x))),
   );
 

@@ -183,7 +183,7 @@ class _SaveViewState extends State<SaveView> {
                                               decoration: const BoxDecoration(color: Color(0xFFD6CDFE), shape: BoxShape.circle),
                                               child: ClipRRect(
                                                 borderRadius: BorderRadius.circular(20.dm),
-                                                child:   state.savePostList[index].files != null &&   state.savePostList[index].files!.isNotEmpty
+                                                child: state.savePostList[index].files != null && state.savePostList[index].files!.isNotEmpty
                                                     ? CachedNetworkImage(
                                                         errorWidget: (context, url, error) => Image.asset(
                                                           videoDemoImg,
@@ -194,7 +194,7 @@ class _SaveViewState extends State<SaveView> {
                                                         height: 40.h,
                                                         width: 40.w,
                                                         fit: BoxFit.contain,
-                                                        imageUrl: ApiUrl.imageUrl +  state.savePostList[index].files![0].file.toString(),
+                                                        imageUrl: ApiUrl.imageUrl + state.savePostList[index].files![0].file.toString(),
                                                         placeholder: (a, b) => const Center(
                                                           child: CircularProgressIndicator(),
                                                         ),
@@ -223,7 +223,7 @@ class _SaveViewState extends State<SaveView> {
                                               ),
                                             ),
                                             Text(
-                                              state.savePostList[index].city!.title.toString(),
+                                              "${state.savePostList[index].user!.city ?? ""},${state.savePostList[index].user!.state ?? ""}",
                                               textAlign: TextAlign.center,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,

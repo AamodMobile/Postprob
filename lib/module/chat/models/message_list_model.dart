@@ -107,64 +107,81 @@ class MessageListModelData {
 }
 
 class MessageListModel {
+  dynamic id;
   dynamic userId;
   dynamic recipientId;
-  dynamic channelId;
   dynamic eventId;
-  List<String>? filePath;
+  dynamic channelId;
   String? message;
-  DateTime? updatedAt;
-  DateTime? createdAt;
-  dynamic id;
+  List<String>? filePath;
+  List<String>? photos;
+  List<String>? videos;
+  dynamic fileType;
   dynamic isRead;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? deletedAt;
   dynamic isSender;
   String? time;
 
   MessageListModel({
+    this.id,
     this.userId,
     this.recipientId,
-    this.channelId,
     this.eventId,
-    this.filePath,
+    this.channelId,
     this.message,
-    this.updatedAt,
-    this.createdAt,
-    this.id,
+    this.filePath,
+    this.photos,
+    this.videos,
+    this.fileType,
     this.isRead,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
     this.isSender,
     this.time,
   });
 
   factory MessageListModel.fromJson(Map<String, dynamic> json) => MessageListModel(
-        userId: json["user_id"],
-        recipientId: json["recipient_id"],
-        channelId: json["channel_id"],
-        eventId: json["event_id"],
-        filePath: json["file_path"] == null ? [] : List<String>.from(json["file_path"]!.map((x) => x)),
-        message: json["message"],
-        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-        id: json["id"],
-        isRead: json["is_read"],
-        isSender: json["is_sender"],
-        time: json["time"],
-      );
+    id: json["id"],
+    userId: json["user_id"],
+    recipientId: json["recipient_id"],
+    eventId: json["event_id"],
+    channelId: json["channel_id"],
+    message: json["message"],
+    filePath: json["file_path"] == null ? [] : List<String>.from(json["file_path"]!.map((x) => x)),
+    photos: json["photos"] == null ? [] : List<String>.from(json["photos"]!.map((x) => x)),
+    videos: json["videos"] == null ? [] : List<String>.from(json["videos"]!.map((x) => x)),
+    fileType: json["file_type"],
+    isRead: json["is_read"],
+    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    deletedAt: json["deleted_at"],
+    isSender: json["is_sender"],
+    time: json["time"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "user_id": userId,
-        "recipient_id": recipientId,
-        "channel_id": channelId,
-        "event_id": eventId,
-        "file_path": filePath == null ? [] : List<dynamic>.from(filePath!.map((x) => x)),
-        "message": message,
-        "updated_at": updatedAt?.toIso8601String(),
-        "created_at": createdAt?.toIso8601String(),
-        "id": id,
-        "is_read": isRead,
-        "is_sender": isSender,
-        "time": time,
-      };
+    "id": id,
+    "user_id": userId,
+    "recipient_id": recipientId,
+    "event_id": eventId,
+    "channel_id": channelId,
+    "message": message,
+    "file_path": filePath == null ? [] : List<dynamic>.from(filePath!.map((x) => x)),
+    "photos": photos == null ? [] : List<dynamic>.from(photos!.map((x) => x)),
+    "videos": videos == null ? [] : List<dynamic>.from(videos!.map((x) => x)),
+    "file_type": fileType,
+    "is_read": isRead,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+    "deleted_at": deletedAt,
+    "is_sender": isSender,
+    "time": time,
+  };
 }
+
 
 class Link {
   String? url;

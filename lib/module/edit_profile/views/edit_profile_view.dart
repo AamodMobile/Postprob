@@ -111,7 +111,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                                 ),
                               ),
                               Text(
-                                state.cityState,
+                               "${state.city},${state.state}",
                                 textAlign: TextAlign.start,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

@@ -8,9 +8,9 @@ import 'package:postprob/module/profile/providers/profile_provider.dart';
 class AddWorkExperienceView extends StatefulWidget {
   final bool isEdit;
   final String id;
-  Experience? experience;
+  final Experience? experience;
 
-  AddWorkExperienceView({super.key, required this.isEdit, required this.id, this.experience});
+  const AddWorkExperienceView({super.key, required this.isEdit, required this.id, this.experience});
 
   @override
   State<AddWorkExperienceView> createState() => _AddWorkExperienceViewState();
@@ -132,15 +132,22 @@ class _AddWorkExperienceViewState extends State<AddWorkExperienceView> {
                             hintText: "",
                             readOnly: true,
                             onTap: () {
-                              state.openDatePicker(context, false, "work experience");
+                              if (isCheck) {
+                              } else {
+                                state.openDatePicker(context, false, "work experience");
+                              }
                             },
                             labelText: "End date",
                             controller: state.endDate,
                             validator: (v) {
-                              if (v!.isEmpty) {
-                                return "Enter End date";
+                              if (isCheck) {
+                                return null;
+                              } else {
+                                if (v!.isEmpty) {
+                                  return "Enter End date";
+                                }
+                                return null;
                               }
-                              return null;
                             },
                           ),
                         )
@@ -156,6 +163,7 @@ class _AddWorkExperienceViewState extends State<AddWorkExperienceView> {
                           onChanged: (v) {
                             setState(() {
                               isCheck = v;
+                              state.endDate.text = "";
                             });
                           },
                         ),
@@ -211,6 +219,7 @@ class _AddWorkExperienceViewState extends State<AddWorkExperienceView> {
                               state.startDate.text,
                               state.endDate.text,
                               state.jobDescription.text,
+                              isCheck ? "1" : "0",
                             );
                           }
                         } else {
@@ -223,6 +232,7 @@ class _AddWorkExperienceViewState extends State<AddWorkExperienceView> {
                               state.startDate.text,
                               state.endDate.text,
                               state.jobDescription.text,
+                              isCheck ? "1" : "0",
                             );
                           }
                         }

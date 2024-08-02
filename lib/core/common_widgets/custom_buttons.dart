@@ -1,5 +1,4 @@
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 
 enum CustomButtonStyle { style1, style2, style3, custom }
@@ -95,7 +94,7 @@ class CustomButtonWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color:  const Color(0xFFD6CDFE),
               borderRadius: BorderRadius.circular(6),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   offset: Offset(0,4),
                   blurRadius: 62,

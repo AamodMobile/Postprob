@@ -23,6 +23,7 @@ class AddPostProvider extends ChangeNotifier {
   TextEditingController position = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController hashTag = TextEditingController();
+  TextEditingController address = TextEditingController();
   String employmentTypeId = "";
   String employmentTypeTittle = "";
   String locationId = "";
@@ -158,6 +159,7 @@ class AddPostProvider extends ChangeNotifier {
         description.text,
         employmentTypeId,
         position.text,
+        address.text,
         tags,
         postFiles,
       );

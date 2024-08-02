@@ -193,7 +193,7 @@ class _MyApplyApplicationListViewState extends State<MyApplyApplicationListView>
                                                 ),
                                               ),
                                               Text(
-                                                state.appliedJobsList[index].jobDetail!.city!.city.toString(),
+                                                "${state.appliedJobsList[index].jobDetail!.user!.city ?? ""},${state.appliedJobsList[index].jobDetail!.user!.state ?? ""}",
                                                 textAlign: TextAlign.center,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,

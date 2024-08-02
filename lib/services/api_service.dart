@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -57,95 +59,6 @@ class ApiService {
     }, body: {});
     response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
     return response;
-  }
-
-  ///profileApi
-  static Future<dynamic> profileApi(
-    String aadharNo,
-    String panNo,
-    String medicalRegistrationNo,
-    String educationNo,
-    String aadharCardFront,
-    String aadharCardBack,
-    String panCard,
-    String medicalRegistrationDoc,
-    String educationDoc,
-    String name,
-    String mobile,
-    String password,
-    String businessName,
-    String alternateMobile,
-    String deviceKey,
-    String experience,
-    String addressLine,
-    String pincode,
-    String state,
-    String city,
-    String aboutVendor,
-    String email,
-  ) async {
-    var result;
-    http.Response response;
-    try {
-      var url = ApiUrl.register;
-      Log.console('Http.Post Url: $url');
-      http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse(url));
-      Log.console('Http.Post Headers: ${request.headers}');
-      request.fields['aadhar_no'] = aadharNo.trim();
-      request.fields['pan_no'] = panNo;
-      request.fields['medical_registration_no'] = medicalRegistrationNo;
-      request.fields['education_no'] = educationNo;
-      request.fields['name'] = name.trim();
-      request.fields['mobile_no'] = mobile.trim();
-      request.fields['password'] = password;
-      request.fields['business_name'] = businessName;
-      request.fields['alternate_mobile'] = alternateMobile;
-      request.fields['device_key'] = deviceKey;
-      request.fields['experience'] = experience;
-      request.fields['address_line_1'] = addressLine;
-      request.fields['pincode'] = pincode;
-      request.fields['state'] = state;
-      request.fields['city'] = city;
-      request.fields['about_vendor'] = aboutVendor;
-      request.fields['email'] = email;
-      if (aadharCardFront.isNotEmpty) {
-        http.MultipartFile file = await http.MultipartFile.fromPath('aadhar_card_front', aadharCardFront);
-        request.files.add(file);
-      }
-      if (aadharCardBack.isNotEmpty) {
-        http.MultipartFile file = await http.MultipartFile.fromPath('aadhar_card_back', aadharCardBack);
-        request.files.add(file);
-      }
-      if (panCard.isNotEmpty) {
-        http.MultipartFile file = await http.MultipartFile.fromPath('pan_card', panCard);
-        request.files.add(file);
-      }
-      if (medicalRegistrationDoc.isNotEmpty) {
-        http.MultipartFile file = await http.MultipartFile.fromPath('medical_registration_doc', medicalRegistrationDoc);
-        request.files.add(file);
-      }
-      if (educationDoc.isNotEmpty) {
-        http.MultipartFile file = await http.MultipartFile.fromPath('education_doc', educationDoc);
-        request.files.add(file);
-      }
-      Log.console('Http.Post filed: ${request.fields}');
-      response = await http.Response.fromStream(await request.send());
-      Log.console('Http.Response Body: ${response.body}');
-      if (response.statusCode == 200) {
-        result = jsonDecode(response.body);
-      } else if (response.statusCode == 404) {
-        result = {'status_code': 400, 'message': '404'};
-      } else if (response.statusCode == 401) {
-        result = jsonDecode(response.body);
-      }
-    } catch (e) {
-      result = http.Response(
-        jsonEncode({e.toString()}),
-        204,
-        headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
-      );
-    }
-    return result;
   }
 
   static Future<http.Response> getCategoryListApi() async {
@@ -223,6 +136,7 @@ class ApiService {
     String startDate,
     String endDate,
     String description,
+    String isPosition,
   ) async {
     http.Response response;
     var instance = await SharedPreferences.getInstance();
@@ -236,6 +150,7 @@ class ApiService {
       "start_date": startDate,
       "end_date": endDate,
       "description": description,
+      "is_position": isPosition,
     });
     response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
     return response;
@@ -243,12 +158,13 @@ class ApiService {
 
   static Future<http.Response> addUserEducationApi(
     String userEducationId,
-    String educationLavelId,
+    String educationLevelId,
     String institutionName,
     String fieldOfStudy,
     String startDate,
     String endDate,
     String description,
+    String isPosition,
   ) async {
     http.Response response;
     var instance = await SharedPreferences.getInstance();
@@ -257,12 +173,13 @@ class ApiService {
       'Authorization': 'Bearer $token',
     }, body: {
       "user_education_id": userEducationId,
-      "education_lavel_id": educationLavelId,
+      "education_lavel_id": educationLevelId,
       "institution_name": institutionName,
       "field_of_study": fieldOfStudy,
       "start_date": startDate,
       "end_date": endDate,
       "description": description,
+      "is_position": isPosition,
     });
     response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
     return response;
@@ -314,8 +231,8 @@ class ApiService {
   static Future<http.Response> addUserLanguage(
     String userLanguageId,
     String languageId,
-    String oralLavel,
-    String writtenLavel,
+    String oralLevel,
+    String writtenLevel,
     String isPrimary,
   ) async {
     http.Response response;
@@ -326,8 +243,8 @@ class ApiService {
     }, body: {
       "user_language_id": userLanguageId,
       "language_id": languageId,
-      "oral_lavel": oralLavel,
-      "written_lavel": writtenLavel,
+      "oral_lavel": oralLevel,
+      "written_lavel": writtenLevel,
       "is_primary": isPrimary
     });
     response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
@@ -658,6 +575,7 @@ class ApiService {
     String description,
     String employmentType,
     String position,
+    String address,
     var tags,
     var postFiles,
   ) async {
@@ -680,6 +598,7 @@ class ApiService {
       request.fields['description'] = description;
       request.fields['employment_type'] = employmentType;
       request.fields['position'] = position;
+      request.fields['address'] = address;
       if (postFiles.isNotEmpty) {
         for (int i = 0; i < postFiles.length; i++) {
           final File file = File(postFiles[i].path);
@@ -828,7 +747,9 @@ class ApiService {
       headers: {
         'Authorization': 'Bearer $token',
       },
-      body: {"recipient_id": recipientId},
+      body: {
+        "recipient_id": recipientId,
+      },
     );
     response = http.Response(jsonEncode(result), 200, headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'});
     return response;
@@ -840,6 +761,8 @@ class ApiService {
     String eventId,
     String channelId,
     var files,
+    var video,
+    var photos,
   ) async {
     var result;
     http.Response response;
@@ -862,6 +785,20 @@ class ApiService {
         for (int i = 0; i < files.length; i++) {
           final File file = File(files[i].path);
           http.MultipartFile file2 = await http.MultipartFile.fromPath("files[$i]", file.path.toString());
+          request.files.add(file2);
+        }
+      }
+      if (photos.isNotEmpty) {
+        for (int i = 0; i < photos.length; i++) {
+          final File file = File(photos[i].path);
+          http.MultipartFile file2 = await http.MultipartFile.fromPath("photos[$i]", file.path.toString());
+          request.files.add(file2);
+        }
+      }
+      if (video.isNotEmpty) {
+        for (int i = 0; i < video.length; i++) {
+          final File file = File(video[i].path);
+          http.MultipartFile file2 = await http.MultipartFile.fromPath("videos[$i]", file.path.toString());
           request.files.add(file2);
         }
       }

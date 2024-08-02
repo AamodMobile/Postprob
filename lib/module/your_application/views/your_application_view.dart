@@ -185,7 +185,7 @@ class _YourApplicationViewState extends State<YourApplicationView> {
                                   ),
                                 ),
                                 Text(
-                                  state.applyJobDetails.jobDetail!.city!.city.toString(),
+                                  "${state.applyJobDetails.jobDetail!.user!.city ?? ""},${state.applyJobDetails.jobDetail!.user!.state ?? ""}",
                                   textAlign: TextAlign.center,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,

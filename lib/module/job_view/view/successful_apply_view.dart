@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:postprob/constants/constants.dart';
@@ -140,7 +142,8 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
                                           ),*/
                                           Expanded(
                                             child: Text(
-                                              state.postDetailsModel.city!.title.toString(),
+                                              state.postDetailsModel.user!=null?
+                                              "${state.postDetailsModel.user!.city ?? ""},${ state.postDetailsModel.user!.state ?? ""}":"",
                                               textAlign: TextAlign.center,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -192,7 +195,7 @@ class _SuccessfulApplyViewState extends State<SuccessfulApplyView> {
                                 color: Color(0xFFAFECFE),
                                 shape: BoxShape.circle,
                               ),
-                              child: state.postDetailsModel.user!.image != ""
+                              child:  state.postDetailsModel.user!=null&&state.postDetailsModel.user!.image != ""
                                   ? Center(
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(30.dm),

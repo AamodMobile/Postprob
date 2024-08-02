@@ -193,7 +193,7 @@ class _PostApplicationListViewState extends State<PostApplicationListView> {
                                                 ),
                                               ),
                                               Text(
-                                                state.postJobsList[index].city!.city.toString(),
+                                                "${state.postJobsList[index].user!.city ?? ""},${state.postJobsList[index].user!.state ?? ""}",
                                                 textAlign: TextAlign.center,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,

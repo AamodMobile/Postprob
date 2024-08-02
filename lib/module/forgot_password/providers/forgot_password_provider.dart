@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:postprob/constants/constants.dart';
-import 'package:postprob/constants/util.dart';
 import 'package:postprob/module/forgot_password/view/check_mail_view.dart';
 import 'package:postprob/services/api_logs.dart';
 import 'package:postprob/services/api_service.dart';
 
-class ForgotPasswordProvider extends ChangeNotifier{
+class ForgotPasswordProvider extends ChangeNotifier {
   TextEditingController emailController = TextEditingController();
+
   String? emailValidator(value) {
     const pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
     final regExp = RegExp(pattern);
@@ -23,10 +22,12 @@ class ForgotPasswordProvider extends ChangeNotifier{
       return null;
     }
   }
+
   void emailUpdate(String email) {
     emailController.text = email;
     notifyListeners();
   }
+
   Future<void> forgetPasswordApiCall(BuildContext context) async {
     try {
       showProgress(context);

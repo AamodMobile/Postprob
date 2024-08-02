@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:postprob/core/common_widgets/spacer.dart';
 
-
-
 class ColumnSpacer extends StatelessWidget {
-  /// This snippet shows O/P of [ColumnSpacer].
-  ///
-  /// ```dart
-  /// I/P : [19, 21]
-  /// O/P : [19, 7, 21]
-  ///
-  /// I/P : [19, 21, 23]
-  /// O/P : [19, 7, 21, 7, 23]
-  /// ```
-  /// {@end-tool}
+  /*  This snippet shows O/P of [ColumnSpacer].
+    ```dart
+   I/P : [19, 21]
+   O/P : [19, 7, 21]
+   I/P : [19, 21, 23]
+   O/P : [19, 7, 21, 7, 23]
+   ```
+ {@end-tool}*/
   const ColumnSpacer({
     super.key,
     required this.children,
-    this.spacerWidget = const SpacerVertical(height: 8,),
+    this.spacerWidget = const SpacerVertical(
+      height: 8,
+    ),
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.mainAxisSize = MainAxisSize.min,
-  })  : assert(
-  children.length > 1,
-  'children should be more than 1',
-  );
+  }) : assert(
+          children.length > 1,
+          'children should be more than 1',
+        );
 
   final CrossAxisAlignment crossAxisAlignment;
 
@@ -35,7 +33,6 @@ class ColumnSpacer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final List<Widget> spacedChildren = <Widget>[];
 
     for (int i = 0; i < children.length; i++) {

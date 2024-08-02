@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
@@ -143,7 +145,7 @@ class _SharedJobViewState extends State<SharedJobView> {
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
-                                  addPostState.successPostModel.city!.city.toString(),
+                                  "${addPostState.successPostModel.user!.city.toString()},${addPostState.successPostModel.user!.state.toString()}",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     color: smallTextCl,
@@ -215,8 +217,8 @@ class _SharedJobViewState extends State<SharedJobView> {
                                                     width: 40.w,
                                                     fit: BoxFit.contain,
                                                   ),
-                                            height: 40.h,
-                                            width: 40.w,
+                                                  height: 40.h,
+                                                  width: 40.w,
                                                   fit: BoxFit.contain,
                                                   imageUrl: ApiUrl.imageUrl + addPostState.successPostModel.files![0].file.toString(),
                                                   placeholder: (a, b) => const Center(
@@ -254,7 +256,7 @@ class _SharedJobViewState extends State<SharedJobView> {
                                             ),
                                             SizedBox(height: 5.h),
                                             Text(
-                                              addPostState.successPostModel.city!.city.toString(),
+                                              "${addPostState.successPostModel.user!.city.toString()},${addPostState.successPostModel.user!.state.toString()}",
                                               style: TextStyle(
                                                 color: smallTextCl,
                                                 fontFamily: regular,

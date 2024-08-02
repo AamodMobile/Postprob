@@ -178,7 +178,7 @@ class _PostApplicationViewState extends State<PostApplicationView> {
                                           ),
                                         ),
                                         Text(
-                                          state.myPostDetails.city!.city.toString(),
+                                          "${state.myPostDetails.user!.city ?? ""},${state.myPostDetails.user!.state ?? ""}",
                                           textAlign: TextAlign.center,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,

@@ -1,4 +1,3 @@
-
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/custom_buttons.dart';
 import 'package:postprob/core/common_widgets/custom_input_fields.dart';
@@ -117,65 +116,65 @@ class _AddSkillViewState extends State<AddSkillView> {
                   ),
                   leading1: search.text.isNotEmpty
                       ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        search.clear();
-                        filterSearchResults('');
-                      });
-                    },
-                    child: Image.asset(
-                      removeIc,
-                      height: 24,
-                      width: 24,
-                    ),
-                  )
+                          onTap: () {
+                            setState(() {
+                              search.clear();
+                              filterSearchResults('');
+                            });
+                          },
+                          child: Image.asset(
+                            removeIc,
+                            height: 24,
+                            width: 24,
+                          ),
+                        )
                       : const SizedBox(),
                 ),
                 const SizedBox(height: 40),
-                searchList.isEmpty&&selectedItem.isNotEmpty
+                searchList.isEmpty && selectedItem.isNotEmpty
                     ? Wrap(
-                  spacing: 10, // Horizontal spacing between items
-                  runSpacing: 10, // Vertical spacing between lines
-                  children: List.generate(selectedItem.length, (index) {
-                    return IntrinsicWidth(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFf0eff2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 7),
-                            Text(
-                              selectedItem[index].title.toString(),
-                              style: const TextStyle(
-                                color: mediumTextCl,
-                                fontFamily: regular,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
+                        spacing: 10, // Horizontal spacing between items
+                        runSpacing: 10, // Vertical spacing between lines
+                        children: List.generate(selectedItem.length, (index) {
+                          return IntrinsicWidth(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFf0eff2),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 7),
+                                  Text(
+                                    selectedItem[index].title.toString(),
+                                    style: const TextStyle(
+                                      color: mediumTextCl,
+                                      fontFamily: regular,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedItemId.remove(selectedItem[index].id.toString());
+                                        selectedItem.removeAt(index);
+                                      });
+                                    },
+                                    child: Image.asset(
+                                      removeIc,
+                                      height: 24,
+                                      width: 24,
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                            const SizedBox(width: 6),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedItemId.remove(selectedItem[index].id.toString());
-                                  selectedItem.removeAt(index);
-                                });
-                              },
-                              child: Image.asset(
-                                removeIc,
-                                height: 24,
-                                width: 24,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-                )
+                          );
+                        }),
+                      )
                     : const SizedBox(),
                 Expanded(
                   child: ListView.builder(
@@ -213,9 +212,7 @@ class _AddSkillViewState extends State<AddSkillView> {
               ],
             ),
           ),
-          bottomSheet: selectedItem.isEmpty
-              ? const SizedBox()
-              : Container(
+          bottomSheet: Container(
             padding: const EdgeInsets.symmetric(horizontal: 50),
             decoration: const BoxDecoration(color: bgCl),
             child: Wrap(

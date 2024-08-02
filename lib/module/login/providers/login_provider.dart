@@ -60,6 +60,8 @@ class LoginProvider extends ChangeNotifier {
       final apiResponse = UserModel.fromJson(json);
       if (context.mounted) {
         if (json["status"] == true) {
+          password.text = "";
+          emailController.text = "";
           closeProgress(context);
           var pref = await SharedPreferences.getInstance();
           await pref.setString('currentUser', jsonEncode(apiResponse.toJson()));

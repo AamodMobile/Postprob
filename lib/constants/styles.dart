@@ -1,4 +1,4 @@
-///App font
+//App font
 
 const regular = "DMSans-Regular";
 const medium = "DMSans-Medium";

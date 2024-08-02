@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:postprob/constants/constants.dart';
-import 'package:postprob/module/your_application/models/applied_jobs_model.dart';
 import 'package:postprob/module/your_post_application/models/my_post_job_details_model.dart';
 import 'package:postprob/module/your_post_application/models/post_jobs_model.dart';
 import 'package:postprob/services/api_logs.dart';
 import 'package:postprob/services/api_service.dart';
 
-class PostApplicationProvider extends ChangeNotifier{
+class PostApplicationProvider extends ChangeNotifier {
   var postJobsList = <PostJobsListModel>[];
   bool isLoading = false;
   bool noData = false;

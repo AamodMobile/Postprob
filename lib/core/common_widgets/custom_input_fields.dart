@@ -1,5 +1,4 @@
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:postprob/constants/constants.dart';
 
 // ignore: must_be_immutable
@@ -263,31 +262,31 @@ class _CustomTextFieldState extends State<CustomTextField> {
 }
 
 class CustomDateField extends StatefulWidget {
-  String hintText;
-  TextEditingController? controller;
-  double? inputLabelWidth;
-  double? inputFieldWidth;
-  String? Function(String?)? validator;
-  List<TextInputFormatter>? inputFormatters;
-  List<String> options; //If user want to show a searchable dropdown
-  bool isRequired;
-  TextInputType? txKeyboardType;
-  bool isEnabled;
-  FocusNode? focusNode;
-  bool isFocused;
-  bool? obscureText;
-  bool check;
-  bool checking;
-  bool changeColor;
-  String labelText;
-  void Function(String)? onChanged;
-  Function(String?)? onSaved;
-  int maxCheck;
+  final String hintText;
+  final TextEditingController? controller;
+  final double? inputLabelWidth;
+  final double? inputFieldWidth;
+  final String? Function(String?)? validator;
+  final List<TextInputFormatter>? inputFormatters;
+  final List<String> options; //If user want to show a searchable dropdown
+  final bool isRequired;
+  final  TextInputType? txKeyboardType;
+  final  bool isEnabled;
+  final  FocusNode? focusNode;
+  final  bool isFocused;
+  final  bool? obscureText;
+  final bool check;
+  final bool checking;
+  final  bool changeColor;
+  final String labelText;
+  final void Function(String)? onChanged;
+  final  Function(String?)? onSaved;
+  final int maxCheck;
   final void Function(String)? onFieldSubmitted;
-  Function()? onEditingComplete;
-  Function()? onTap;
+  final Function()? onEditingComplete;
+  final  Function()? onTap;
 
-  CustomDateField({
+  const CustomDateField({
     super.key,
     this.hintText = "",
     this.maxCheck = 1,

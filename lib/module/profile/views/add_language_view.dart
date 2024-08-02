@@ -10,11 +10,11 @@ class AddLanguageView extends StatefulWidget {
   final ListDataModel listDataModel;
   final bool isEdit;
   final String id;
-  String? oral;
-  String? writing;
-  bool? isPrimary;
+  final String? oral;
+  final String? writing;
+  final bool? isPrimary;
 
-  AddLanguageView({super.key, required this.listDataModel, required this.isEdit, this.oral, this.writing,this.isPrimary, required this.id});
+  const AddLanguageView({super.key, required this.listDataModel, required this.isEdit, this.oral, this.writing,this.isPrimary, required this.id});
 
   @override
   State<AddLanguageView> createState() => _AddLanguageViewState();

@@ -129,7 +129,8 @@ class _UploadCVViewState extends State<UploadCVView> {
                                         ),*/
                                         Expanded(
                                           child: Text(
-                                            state.postDetailsModel.city!.title.toString(),
+                                            state.postDetailsModel.user!=null?
+                                            "${state.postDetailsModel.user!.city ?? ""},${ state.postDetailsModel.user!.state ?? ""}":"",
                                             textAlign: TextAlign.center,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -181,7 +182,7 @@ class _UploadCVViewState extends State<UploadCVView> {
                               color: Color(0xFFAFECFE),
                               shape: BoxShape.circle,
                             ),
-                            child: state.postDetailsModel.user!.image != ""
+                            child:  state.postDetailsModel.user!=null&&state.postDetailsModel.user!.image != ""
                                 ? Center(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(30.dm),

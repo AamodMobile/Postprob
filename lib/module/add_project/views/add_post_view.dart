@@ -153,7 +153,7 @@ class _AddPostViewState extends State<AddPostView> {
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
-                                  profileState.profileModel.citystate ?? "",
+                                  "${profileState.profileModel.city ?? " "},${profileState.profileModel.state ?? " "}",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     color: smallTextCl,
@@ -205,48 +205,52 @@ class _AddPostViewState extends State<AddPostView> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 25.h),
                       addPostState.tags.isNotEmpty
-                          ? Wrap(
-                              spacing: 10.w, // Horizontal spacing between items
-                              runSpacing: 10.h, // Vertical spacing between lines
-                              children: List.generate(addPostState.tags.length, (index) {
-                                return Container(
-                                  width: (MediaQuery.of(context).size.width - 40.w) / 3.9,
-                                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFf5f4f6),
-                                    borderRadius: BorderRadius.circular(10.dm),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      addPostState.tags[index].toString(),
-                                      style: TextStyle(
-                                        color: mediumTextCl,
-                                        fontFamily: regular,
-                                        fontSize: 12.sp,
-                                        fontStyle: FontStyle.normal,
-                                        fontWeight: FontWeight.w400,
+                          ? Column(
+                              children: [
+                                SizedBox(height: 25.h),
+                                Wrap(
+                                  spacing: 10.w, // Horizontal spacing between items
+                                  runSpacing: 10.h, // Vertical spacing between lines
+                                  children: List.generate(addPostState.tags.length, (index) {
+                                    return Container(
+                                      width: (MediaQuery.of(context).size.width - 40.w) / 3.9,
+                                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFf5f4f6),
+                                        borderRadius: BorderRadius.circular(10.dm),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              }),
+                                      child: Center(
+                                        child: Text(
+                                          addPostState.tags[index].toString(),
+                                          style: TextStyle(
+                                            color: mediumTextCl,
+                                            fontFamily: regular,
+                                            fontSize: 12.sp,
+                                            fontStyle: FontStyle.normal,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                )
+                              ],
                             )
                           : const SizedBox(),
-                      SizedBox(height: 25.h),
+                      SizedBox(height: 20.h),
                       addPostState.postImage.path != ""
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(10.dm),
                               child: Image.file(
                                 addPostState.postImage,
-                                height: 150.h,
+                                height: 200.h,
                                 width: MediaQuery.of(context).size.width,
-                                fit: BoxFit.contain,
+                                fit: BoxFit.fill,
                               ),
                             )
                           : const SizedBox(),
-                      SizedBox(height: 80.h),
+                      SizedBox(height: 100.h),
                     ],
                   ),
                 ),

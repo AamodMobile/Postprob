@@ -1,7 +1,7 @@
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/core/common_widgets/custom_input_fields.dart';
 import 'package:postprob/module/add_project/providers/add__post_provider.dart';
 import 'package:postprob/module/add_project/widgets/choose_problem_type_sheet.dart';
-import 'package:postprob/module/add_project/widgets/problem_location_sheet.dart';
 
 class AddPostSecondView extends StatefulWidget {
   final String id;
@@ -230,7 +230,7 @@ class _AddPostSecondViewState extends State<AddPostSecondView> {
                       ),
                     ),
                     SizedBox(height: 10.h),
-                    GestureDetector(
+                  /*  GestureDetector(
                       onTap: () async {
                         if (state.locationId == "") {
                           await ProblemLocationSheet().show(context, state);
@@ -298,6 +298,14 @@ class _AddPostSecondViewState extends State<AddPostSecondView> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 15.h),*/
+                    CustomTextField(
+                      hintText: "Enter Your Address",
+                      labelText: "Address",
+                      fillColor: Colors.white,
+                      controller: state.address,
+                      txKeyboardType: TextInputType.emailAddress,
+                    )
                   ],
                 ),
               ),

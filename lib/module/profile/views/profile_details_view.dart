@@ -106,7 +106,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  state.profileModel.citystate ?? "",
+                                  "${state.profileModel.city ?? ""},${state.profileModel.state ?? ""}",
                                   textAlign: TextAlign.start,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -358,7 +358,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                         setState(() {
                                           title = "Work experience";
                                         });
-                                        Navigator.push(context, createRightToLeftRoute(AddWorkExperienceView(isEdit: false, id: '')));
+                                        Navigator.push(context, createRightToLeftRoute(const AddWorkExperienceView(isEdit: false, id: '')));
                                       },
                                       child: Image.asset(
                                         addCircleIc,
@@ -429,7 +429,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                                   ),
                                                   SizedBox(height: 5.h),
                                                   Text(
-                                                    "${state.profileModel.experience![index].startDate.toString()} - ${state.profileModel.experience![index].endDate.toString()} ,${calculateDuration(state.profileModel.experience![index].startDate.toString(), state.profileModel.experience![index].endDate.toString())}",
+                                                    "${state.profileModel.experience![index].startDate.toString()} - ${state.profileModel.experience![index].endDate == null ? formatDate(DateTime.now()) : state.profileModel.experience![index].endDate.toString()} ,${calculateDuration(state.profileModel.experience![index].startDate.toString(), state.profileModel.experience![index].endDate == null ? "" : state.profileModel.experience![index].endDate.toString())}",
                                                     style: TextStyle(
                                                       color: smallTextCl,
                                                       fontFamily: regular,
@@ -490,7 +490,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                         setState(() {
                                           title = "Education";
                                         });
-                                        Navigator.push(context, createRightToLeftRoute(AddEducationView(isEdit: false, id: '')));
+                                        Navigator.push(context, createRightToLeftRoute(const AddEducationView(isEdit: false, id: '')));
                                       },
                                       child: Image.asset(
                                         addCircleIc,
@@ -561,7 +561,7 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                                   ),
                                                   SizedBox(height: 5.h),
                                                   Text(
-                                                    "${state.profileModel.education![index].startDate.toString()} - ${state.profileModel.education![index].endDate.toString()} ,${calculateDuration(state.profileModel.education![index].startDate.toString(), state.profileModel.education![index].endDate.toString())}",
+                                                    "${state.profileModel.education![index].startDate.toString()} - ${state.profileModel.education![index].endDate == null ? formatDate(DateTime.now()) : state.profileModel.education![index].endDate.toString()} ,${calculateDuration(state.profileModel.education![index].startDate.toString(), state.profileModel.education![index].endDate == null ? "" : state.profileModel.education![index].endDate.toString())}",
                                                     style: TextStyle(
                                                       color: smallTextCl,
                                                       fontFamily: regular,
@@ -826,9 +826,36 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                           ),
                         ),
                         SizedBox(height: 16.h),
-                        contColumn(languageIc, "Documents", () => Navigator.push(context, createRightToLeftRoute(const AddDocumentsView()))),
-                        contColumn(workExperienceIc, "My Posted Problems", () => Navigator.push(context, createRightToLeftRoute(const PostApplicationListView()))),
-                        contColumn(workExperienceIc, "My Apply Problems", () => Navigator.push(context, createRightToLeftRoute(const MyApplyApplicationListView()))),
+                        contColumn(
+                          languageIc,
+                          "Documents",
+                          () {
+                            setState(() {
+                              title = "Documents";
+                            });
+                            Navigator.push(context, createRightToLeftRoute(const AddDocumentsView()));
+                          },
+                        ),
+                        contColumn(
+                          workExperienceIc,
+                          "My Posted Problems",
+                          () {
+                            setState(() {
+                              title = "My Posted Problems";
+                            });
+                            Navigator.push(context, createRightToLeftRoute(const PostApplicationListView()));
+                          },
+                        ),
+                        contColumn(
+                          workExperienceIc,
+                          "My Apply Problems",
+                          () {
+                            setState(() {
+                              title = "My Apply Problems";
+                            });
+                            Navigator.push(context, createRightToLeftRoute(const MyApplyApplicationListView()));
+                          },
+                        ),
                         SizedBox(height: 16.h),
                       ],
                     ),
@@ -894,9 +921,18 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
   String calculateDuration(String startDateString, String endDateString) {
     DateFormat dateFormat = DateFormat('dd-MM-yyyy');
     DateTime startDate = dateFormat.parse(startDateString);
-    DateTime endDate = dateFormat.parse(endDateString);
-    Duration difference = endDate.difference(startDate);
+    DateTime endDate;
+    if (endDateString == "") {
+      DateTime endDateNow = DateTime.now();
+      DateFormat dateFormat1 = DateFormat('dd-MM-yyyy');
+      String formattedEndDate = dateFormat1.format(endDateNow);
+      DateFormat dateFormat2 = DateFormat('dd-MM-yyyy');
+      endDate = dateFormat2.parse(formattedEndDate);
+    } else {
+      endDate = dateFormat.parse(endDateString);
+    }
 
+    Duration difference = endDate.difference(startDate);
     int totalDays = difference.inDays;
     int years = totalDays ~/ 365;
     int remainingDays = totalDays % 365;
@@ -915,7 +951,12 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
     } else {
       durationString += "1 Days";
     }
-
     return durationString.trim();
+  }
+
+  String formatDate(DateTime dateString) {
+    DateFormat dateFormat1 = DateFormat('dd-MM-yyyy');
+    String formattedEndDate = dateFormat1.format(dateString);
+    return formattedEndDate;
   }
 }

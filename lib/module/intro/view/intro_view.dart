@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/login/view/login_view.dart';
 

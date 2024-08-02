@@ -1,7 +1,11 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 
+import 'package:file_picker/file_picker.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/chat/models/chat_list_model.dart';
 import 'package:postprob/module/chat/models/message_list_model.dart';
@@ -26,8 +30,98 @@ class ChatListProvider extends ChangeNotifier {
   int totalPage = 0;
   bool hasMore = false;
   var files = [];
+  var videos = [];
+  var photos = [];
   TextEditingController msg = TextEditingController();
   File image = File("");
+  File video = File("");
+  String selectedFilePath = "";
+  int? fileSize;
+  DateTime? fileDate;
+  bool isSelect = false;
+  bool isVideo = false;
+  var thumbPath;
+
+  //VideoPlayerController? controller;
+  void pickVideo(BuildContext context) async {
+    var result = await FilePicker.platform.pickFiles(
+      allowCompression: true,
+      allowMultiple: false,
+      dialogTitle: 'Select a Videos',
+      type: FileType.video,
+    );
+    if (result != null) {
+      var files = result.files;
+      var file = files[0];
+      int size = bytesToMB(file.size);
+      if (size > 20) {
+        if (context.mounted) {
+          errorToast(context, "Video size should be less then 20 mb");
+        }
+      } else {
+        videos.add(file);
+        video = File(file.path!);
+        isSelect = true;
+        isVideo = true;
+        // _initVideo();
+        // thumbPath = await _getImage(file.path!);
+        Log.console("Thumbnail path: $thumbPath");
+        notifyListeners();
+      }
+    } else {
+      if (context.mounted) {
+        errorToast(context, "Video no pick");
+      }
+    }
+  }
+
+  /* Future<String?> _getImage(String videoUrl) async {
+    //await Future.delayed(Duration(milliseconds: 500));
+    final thumbnailPath = await VideoThumbnail.thumbnailFile(
+      video: videoUrl,
+      imageFormat: ImageFormat.JPEG,
+      maxWidth: 1000,
+      maxHeight: 1000,
+    );
+    return thumbnailPath;
+  }*/
+  /* void _initVideo() async {
+    */ /* if (controller != null) {
+      controller!.removeListener(_videoControllerListener);
+    }*/ /*
+
+    if (isSelect == true) {
+      controller = VideoPlayerController.file(File(video.path));
+
+      await controller!.initialize();
+      //controller!.addListener(_videoControllerListener);
+
+      notifyListeners();
+    }
+  }*/
+
+  int bytesToMB(int bytes) {
+    if (bytes == 0) return 0;
+    return (bytes / math.pow(1024, 2)).ceil();
+  }
+
+  Future<void> uploadPDFFile(BuildContext context) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+    if (result != null) {
+      selectedFilePath = result.files.single.path.toString();
+      files.add(result.files[0]);
+      fileSize = File(selectedFilePath).lengthSync();
+      fileDate = File(selectedFilePath).lastModifiedSync();
+      notifyListeners();
+    } else {
+      if (context.mounted) {
+        errorToast(context, "Not pick file");
+      }
+    }
+  }
 
   void setupScrollListener() {
     scrollController.addListener(() {
@@ -143,6 +237,17 @@ class ChatListProvider extends ChangeNotifier {
     });
   }
 
+  void scrollSmooth() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(scrollController.position.minScrollExtent-200);
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
   Future<void> chatListGet(BuildContext context, bool isLoad) async {
     try {
       isLoading = isLoad;
@@ -190,8 +295,8 @@ class ChatListProvider extends ChangeNotifier {
         isBlock = json["is_block"].toString();
         totalPage = int.parse(json["total_pages"].toString());
         Log.console("totalPage$totalPage");
-        Log.console("totalPage$channelId");
-        Log.console("totalPage$eventId");
+        Log.console("channelId$channelId");
+        Log.console("eventId$eventId");
         if (isFast != null) {
           if (isFast) {
             messageList.clear();
@@ -200,6 +305,7 @@ class ChatListProvider extends ChangeNotifier {
             hasMore = true;
           } else {
             messageList.insertAll(0, List<MessageListModel>.from(json["data"]["data"].map((i) => MessageListModel.fromJson(i))).toList(growable: true));
+            scrollSmooth();
           }
         }
       } else {
@@ -214,7 +320,7 @@ class ChatListProvider extends ChangeNotifier {
 
   Future<void> sendMessagePusher(BuildContext context, String msg, String recipientId, String userId) async {
     try {
-      currentPage=1;
+      currentPage = 1;
       if (context.mounted) {
         final Map<String, dynamic> jsonData = {
           "user_id": userId,
@@ -235,11 +341,13 @@ class ChatListProvider extends ChangeNotifier {
 
   Future<void> sendMessage(BuildContext context, String message) async {
     try {
-      var result = await ApiService.sendMessage(message, otherUserId, eventId, channelId, files);
+      var result = await ApiService.sendMessage(message, otherUserId, eventId, channelId, files, videos, photos);
       if (context.mounted) {
         if (result["status"] == true) {
           msg.text = "";
           files.clear();
+          videos.clear();
+          photos.clear();
           /* final Map<String, dynamic> jsonData = {
             "user_id": json["data"]["user_id"],
             "recipient_id": json["data"]["recipient_id"],

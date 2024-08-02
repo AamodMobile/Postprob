@@ -466,7 +466,8 @@ class _HomeViewState extends State<HomeView> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  postJob.city!.title.toString(),
+                                                  postJob.user!=null?
+                                                  "${postJob.user!.city??""},${ postJob.user!.state??""}":"",
                                                   textAlign: TextAlign.center,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,

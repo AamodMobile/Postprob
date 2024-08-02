@@ -1,4 +1,3 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/core/common_widgets/column_spacer.dart';

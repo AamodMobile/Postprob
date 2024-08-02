@@ -139,7 +139,8 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 28.0),
                                         child: Text(
-                                          state.postDetailsModel.user!.name.toString(),
+                                            state.postDetailsModel.user!=null?
+                                          state.postDetailsModel.user!.name.toString():"",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: blackCl,
@@ -176,7 +177,8 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                             ),*/
                                             Expanded(
                                               child: Text(
-                                                state.postDetailsModel.city != null ? state.postDetailsModel.city!.title.toString() : "",
+                                                state.postDetailsModel.user!=null?
+                                                "${state.postDetailsModel.user!.city ?? ""},${ state.postDetailsModel.user!.state ?? ""}":"",
                                                 textAlign: TextAlign.center,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -228,7 +230,7 @@ class _PostDetailsViewState extends State<PostDetailsView> {
                                   color: Color(0xFFAFECFE),
                                   shape: BoxShape.circle,
                                 ),
-                                child: state.postDetailsModel.user!.image != ""
+                                child:  state.postDetailsModel.user!=null&&state.postDetailsModel.user!.image != ""
                                     ? Center(
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(30.dm),

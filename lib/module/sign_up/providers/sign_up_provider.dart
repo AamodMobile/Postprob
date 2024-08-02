@@ -1,9 +1,12 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/add_project/models/cities_model.dart';
 import 'package:postprob/module/dashboard/view/dashboard_view.dart';
@@ -108,6 +111,7 @@ class SignUpProvider extends ChangeNotifier {
       if (context.mounted) {
         if (json["status"] == true) {
           closeProgress(context);
+          reset();
           var pref = await SharedPreferences.getInstance();
           await pref.setString('currentUser', jsonEncode(apiResponse.toJson()));
           await pref.setString('currentToken', apiResponse.accessToken.toString());
@@ -130,7 +134,7 @@ class SignUpProvider extends ChangeNotifier {
 
   Future<void> getCheckInStatus(BuildContext context) async {
     try {
-      final position = await LocationStatus().determinePosition();
+      final position = await LocationStatus().determinePosition(context);
       if (position.latitude != 0.0 && position.longitude != 0.0) {
         await getCurrentPosition();
       } else {
@@ -187,13 +191,18 @@ class SignUpProvider extends ChangeNotifier {
 }
 
 class LocationStatus {
-  Future<Position> determinePosition() async {
+  Future<Position> determinePosition(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
+
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Please enable your location, it seems to be turned off.');
+      if (context.mounted) {
+        _showLocationDialog(context);
+      }
+      return Future.error('Location services are disabled.');
     }
+
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -201,9 +210,40 @@ class LocationStatus {
         return Future.error('Location permissions are denied');
       }
     }
+
     if (permission == LocationPermission.deniedForever) {
       return Future.error('Location permissions are permanently denied, we cannot request permissions. Please give permission and try again.');
     }
+
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
+  }
+
+  void _showLocationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Location Service Disabled'),
+          content: const Text('Please enable your location service.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Settings'),
+              onPressed: () async {
+                await openAppSettings();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

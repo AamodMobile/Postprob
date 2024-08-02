@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/core/common_widgets/column_spacer.dart';
 import 'package:postprob/core/common_widgets/custom_input_fields.dart';
 import 'package:postprob/core/common_widgets/loader_class.dart';
 import 'package:postprob/core/common_widgets/media_source_picker.dart';
@@ -349,10 +350,17 @@ class _MessageViewState extends State<MessageView> {
                                 child: state.messageList[index].isSender.toString() == "0"
                                     ? ReceiverChatItem(
                                         messageListModel: state.messageList[index],
-                                        file: state.messageList[index].filePath!.isEmpty ? false : true,
                                         image: widget.user.image.toString(),
+                                        file: state.messageList[index].filePath!.isEmpty ? false : true,
+                                        images: state.messageList[index].photos!.isEmpty ? false : true,
+                                        video: state.messageList[index].videos!.isEmpty ? false : true,
                                       )
-                                    : SenderChatItem(messageListModel: state.messageList[index], file: state.messageList[index].filePath!.isEmpty ? false : true),
+                                    : SenderChatItem(
+                                        messageListModel: state.messageList[index],
+                                        file: state.messageList[index].filePath!.isEmpty ? false : true,
+                                        image: state.messageList[index].photos!.isEmpty ? false : true,
+                                        video: state.messageList[index].videos!.isEmpty ? false : true,
+                                      ),
                               ),
                             ),
                           ],
@@ -367,7 +375,7 @@ class _MessageViewState extends State<MessageView> {
             bottomSheet: state.isBlock == "1"
                 ? Container(
                     color: const Color(0xFFF9F9F9),
-                    padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 15.h),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
                     width: MediaQuery.of(context).size.width,
                     child: Text(
                       "Chat Block",
@@ -403,7 +411,7 @@ class _MessageViewState extends State<MessageView> {
                                 fillColor: Colors.white,
                                 leading: InkWell(
                                   onTap: () {
-                                    onPickAvatarTap(context);
+                                    showTypeFileBottomSheet(context, state);
                                   },
                                   child: Material(
                                     color: Colors.transparent,
@@ -459,11 +467,13 @@ class _MessageViewState extends State<MessageView> {
     );
   }
 
-  void onPickAvatarTap(BuildContext context) {
+  void showTypeFileBottomSheet(BuildContext context, ChatListProvider chatListProvider) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-        return const MediaSourcePicker();
+        return TypeSource(
+          chatListProvider: chatListProvider,
+        );
       },
     ).then((value) async {
       if (value != null && value is ImageSource) {
@@ -479,5 +489,170 @@ class _MessageViewState extends State<MessageView> {
         }
       }
     });
+  }
+}
+
+class TypeSource extends StatefulWidget {
+  final ChatListProvider chatListProvider;
+
+  const TypeSource({super.key, required this.chatListProvider});
+
+  @override
+  State<TypeSource> createState() => _TypeSourceState();
+}
+
+class _TypeSourceState extends State<TypeSource> {
+  void onPickAvatarTap(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return const MediaSourcePicker();
+      },
+    ).then((value) async {
+      if (value != null && value is ImageSource) {
+        File? pickedFile = await PickImageUtility.instance(
+          applyEditor: true,
+          context: context,
+        ).pickedFile(value);
+        if (pickedFile != null) {
+          widget.chatListProvider.image = pickedFile;
+          var path = widget.chatListProvider.image.path;
+          widget.chatListProvider.photos.add(widget.chatListProvider.image);
+          Log.console(path);
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20.dm),
+      child: ColumnSpacer(
+        spacerWidget: SizedBox(
+          height: 12.h,
+        ),
+        children: [
+          InkWell(
+            onTap: () {
+              onPickAvatarTap(context);
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: 35.h,
+                  height: 35.h,
+                  padding: const EdgeInsets.all(8),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF3F3F3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Image.asset(
+                    galleryIc,
+                    height: 20,
+                    width: 20,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "Image",
+                  style: TextStyle(
+                    color: const Color(0xFF1B1B1B),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    height: 0.20,
+                  ),
+                )
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              widget.chatListProvider.pickVideo(context);
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: 35.h,
+                  height: 35.h,
+                  padding: const EdgeInsets.all(8),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF3F3F3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Image.asset(
+                    galleryIc,
+                    height: 20,
+                    width: 20,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "Video",
+                  style: TextStyle(
+                    color: const Color(0xFF1B1B1B),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    height: 0.20,
+                  ),
+                )
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              widget.chatListProvider.uploadPDFFile(context);
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: 35.h,
+                  height: 35.h,
+                  padding: const EdgeInsets.all(8),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF3F3F3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Image.asset(
+                    uploadFileIc,
+                    height: 20,
+                    width: 20,
+                    color: yellowDark,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "File",
+                  style: TextStyle(
+                    color: const Color(0xFF1B1B1B),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    height: 0.20,
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(height: 10.h)
+        ],
+      ),
+    );
   }
 }

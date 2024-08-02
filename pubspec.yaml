@@ -1,6 +1,6 @@
 name: postprob
-description: "A new Flutter project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+description: "PostProb For Post Problem App"
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
@@ -37,6 +37,14 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   huge_listview: ^2.0.12
   google_sign_in: ^6.2.1
+  permission_handler: ^11.3.1
+  dio: ^5.5.0+1
+  path_provider: ^2.1.4
+  image_gallery_saver: ^2.0.3
+  syncfusion_flutter_pdfviewer: ^24.1.43
+  video_player: ^2.5.1
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

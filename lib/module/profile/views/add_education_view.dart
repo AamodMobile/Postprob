@@ -9,9 +9,9 @@ import 'package:postprob/module/profile/views/level_of_education_view.dart';
 class AddEducationView extends StatefulWidget {
   final bool isEdit;
   final String id;
-  Education? education;
+  final Education? education;
 
-  AddEducationView({super.key, required this.isEdit, required this.id, this.education});
+  const AddEducationView({super.key, required this.isEdit, required this.id, this.education});
 
   @override
   State<AddEducationView> createState() => _AddEducationViewState();
@@ -163,14 +163,21 @@ class _AddEducationViewState extends State<AddEducationView> {
                             labelText: "End date",
                             readOnly: true,
                             onTap: () {
-                              state.openDatePicker(context, false, "Education");
+                              if (isCheck) {
+                              } else {
+                                state.openDatePicker(context, false, "Education");
+                              }
                             },
                             controller: state.endDateStudy,
                             validator: (v) {
-                              if (v!.isEmpty) {
-                                return "Enter End date";
+                              if (isCheck) {
+                                return null;
+                              } else {
+                                if (v!.isEmpty) {
+                                  return "Enter End date";
+                                }
+                                return null;
                               }
-                              return null;
                             },
                           ),
                         )
@@ -186,6 +193,7 @@ class _AddEducationViewState extends State<AddEducationView> {
                           onChanged: (v) {
                             setState(() {
                               isCheck = v;
+                              state.endDateStudy.text = "";
                             });
                           },
                         ),
@@ -241,6 +249,7 @@ class _AddEducationViewState extends State<AddEducationView> {
                             state.startDateStudy.text,
                             state.endDateStudy.text,
                             state.educationDescription.text,
+                            isCheck ? "1" : "0",
                           );
                         } else {
                           if (formKey.currentState!.validate()) {
@@ -253,6 +262,7 @@ class _AddEducationViewState extends State<AddEducationView> {
                               state.startDateStudy.text,
                               state.endDateStudy.text,
                               state.educationDescription.text,
+                              isCheck ? "1" : "0",
                             );
                           }
                         }

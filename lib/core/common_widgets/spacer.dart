@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart'
-    show BoxDecoration, Color, DecoratedBox, Key, SizedBox;
+    show BoxDecoration, Color, DecoratedBox, SizedBox;
 
 class SpacerVertical extends SizedBox {
   const SpacerVertical({required double super.height, super.key});

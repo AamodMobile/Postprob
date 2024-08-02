@@ -138,7 +138,7 @@ class _ConnectionViewState extends State<ConnectionView> {
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    state.connectionList[index].user!.name.toString(),
+                                                    state.connectionList[index].user != null ? state.connectionList[index].user!.name.toString() : "",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
                                                       color: mediumTextCl,

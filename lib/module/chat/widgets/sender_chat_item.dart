@@ -254,50 +254,265 @@ class _SenderChatItemState extends State<SenderChatItem> {
                       ],
                     )
                   : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset(
-                          pdfIc,
-                          height: 44.h,
-                          width: 44.w,
-                        ),
-                        SizedBox(
-                          width: 10.w,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.messageListModel.message.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: medium,
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14.sp,
-                                ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 10.w,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.messageListModel.message.toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: medium,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "867 Kb PDF",
+                                    style: TextStyle(
+                                      color: const Color(0xFFD0DBE0),
+                                      fontFamily: regular,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 5.h),
-                              Text(
-                                "867 Kb PDF",
-                                style: TextStyle(
-                                  color: const Color(0xFFD0DBE0),
-                                  fontFamily: regular,
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12.sp,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                            SizedBox(width: 15.w),
+                            Image.asset(
+                              optionsIc,
+                              height: 24.h,
+                              width: 24.w,
+                              color: Colors.white,
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 15.w),
-                        Image.asset(
-                          optionsIc,
-                          height: 24.h,
-                          width: 24.w,
-                          color: Colors.white,
-                        ),
+                        widget.messageListModel.photos!.isNotEmpty
+                            ? Column(
+                                children: [
+                                  SizedBox(height: 10.h),
+                                  SizedBox(
+                                    height: 50.h,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: widget.messageListModel.photos?.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return Container(
+                                          margin: EdgeInsets.only(right: 10.w),
+                                          child: widget.messageListModel.photos!.isNotEmpty
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(context, createRightToLeftRoute(FullImageView(image: "${ApiUrl.imageUrl}${widget.messageListModel.photos![index].toString()}")));
+                                                  },
+                                                  child: ClipRRect(
+                                                    borderRadius: BorderRadius.circular(8.dm),
+                                                    child: CachedNetworkImage(
+                                                      errorWidget: (context, url, error) => Image.asset(
+                                                        pdfIc,
+                                                        height: 44.h,
+                                                        width: 44.w,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      height: 44.h,
+                                                      width: 44.w,
+                                                      fit: BoxFit.cover,
+                                                      imageUrl: ApiUrl.imageUrl + widget.messageListModel.photos![index].toString(),
+                                                      placeholder: (a, b) => const Center(
+                                                        child: CircularProgressIndicator(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Image.asset(
+                                                  pdfIc,
+                                                  height: 44.h,
+                                                  width: 44.w,
+                                                ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
+                        widget.messageListModel.filePath != null && widget.messageListModel.filePath!.isNotEmpty
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "Doc",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: medium,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  MediaQuery.removePadding(
+                                    context: context,
+                                    removeTop: true,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: widget.messageListModel.filePath?.length,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return Container(
+                                          margin: EdgeInsets.only(bottom: 10.h),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(context, createRightToLeftRoute(WebViewScreen(url: "${ApiUrl.imageUrl}${widget.messageListModel.filePath![index].toString()}")));
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Image.asset(
+                                                  pdfIc,
+                                                  height: 44.h,
+                                                  width: 44.w,
+                                                ),
+                                                SizedBox(
+                                                  width: 10.w,
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        widget.messageListModel.filePath![index].toString(),
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontFamily: medium,
+                                                          fontStyle: FontStyle.normal,
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 14.sp,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+
+                                ],
+                              )
+                            : const SizedBox(),
+                        widget.messageListModel.videos != null && widget.messageListModel.videos!.isNotEmpty
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "Video",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: medium,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  MediaQuery.removePadding(
+                                    context: context,
+                                    removeTop: true,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: widget.messageListModel.videos?.length,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return Container(
+                                          margin: EdgeInsets.only(bottom: 10.h),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                createRightToLeftRoute(
+                                                  VideoPlayerItem(
+                                                    videoUrl: "${ApiUrl.imageUrl}${widget.messageListModel.videos![index].toString()}",
+                                                    isPaused: false,
+                                                    videoId: 1,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Row(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  child: Stack(
+                                                    children: [
+                                                      Image.asset(
+                                                        videoDemoImg,
+                                                        height: 44.h,
+                                                        width: 65.w,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      Positioned(
+                                                        top: 0,
+                                                        bottom: 0,
+                                                        right: 0,
+                                                        left: 0,
+                                                        child: Center(
+                                                          child: Image.asset(
+                                                            playIc,
+                                                            height: 24.h,
+                                                            width: 24.w,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10.w,
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        widget.messageListModel.videos![index].toString(),
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontFamily: medium,
+                                                          fontStyle: FontStyle.normal,
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 14.sp,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+
+                                ],
+                              )
+                            : const SizedBox()
                       ],
                     )
               : widget.image
@@ -525,7 +740,8 @@ class _SenderChatItemState extends State<SenderChatItem> {
                                                     videoId: 1,
                                                   ),
                                                 ),
-                                              ); },
+                                              );
+                                            },
                                             child: Row(
                                               children: [
                                                 ClipRRect(

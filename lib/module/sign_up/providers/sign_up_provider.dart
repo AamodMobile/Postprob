@@ -24,7 +24,7 @@ class SignUpProvider extends ChangeNotifier {
   TextEditingController emailController = TextEditingController();
   String? currentAddress;
   Position? _currentPosition;
-  var pincode = "";
+  var pinCode = "";
   var city = "";
   var cityId = "";
   var state = "";
@@ -132,6 +132,36 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> googleRegisterApiCall(BuildContext context, String name, String state, String city, String email, String googleId) async {
+    try {
+      showProgress(context);
+      var result = await ApiService.googleRegister(email, googleId, name, city, state);
+      var json = jsonDecode(result.body);
+      final apiResponse = UserModel.fromJson(json);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          closeProgress(context);
+          reset();
+          var pref = await SharedPreferences.getInstance();
+          await pref.setString('currentUser', jsonEncode(apiResponse.toJson()));
+          await pref.setString('currentToken', apiResponse.accessToken.toString());
+          if (context.mounted) {
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const DashboardView(index: 0)), (route) => false);
+            successToast(context, json["message"]);
+          }
+        } else {
+          closeProgress(context);
+          errorToast(context, json["message"]);
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        closeProgress(context);
+        Log.console(e.toString());
+      }
+    }
+  }
+
   Future<void> getCheckInStatus(BuildContext context) async {
     try {
       final position = await LocationStatus().determinePosition(context);
@@ -162,10 +192,10 @@ class SignUpProvider extends ChangeNotifier {
 
   Future<void> _getAddressFromLatLng(Position position) async {
     try {
-      await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placemarks) {
-        Placemark place = placemarks[0];
+      await placemarkFromCoordinates(position.latitude, position.longitude).then((List<Placemark> placeMarks) {
+        Placemark place = placeMarks[0];
         currentAddress = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}';
-        pincode = '${place.postalCode}';
+        pinCode = '${place.postalCode}';
         city = '${place.locality}';
         state = place.administrativeArea ?? '';
         Log.console(state);

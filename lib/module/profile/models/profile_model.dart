@@ -79,7 +79,7 @@ class ProfileModel {
         updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
         deletedAt: json["deleted_at"],
         citystate: json["citystate"] ?? "",
-        totalPosts: json["total_posts"],
+        totalPosts: json["total_posts"] ?? 0,
         experience: json["experience"] == null ? [] : List<Experience>.from(json["experience"]!.map((x) => Experience.fromJson(x))),
         education: json["education"] == null ? [] : List<Education>.from(json["education"]!.map((x) => Education.fromJson(x))),
         documents: json["documents"] == null ? [] : List<Document>.from(json["documents"]!.map((x) => Document.fromJson(x))),

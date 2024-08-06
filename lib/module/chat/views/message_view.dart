@@ -508,23 +508,25 @@ class _TypeSourceState extends State<TypeSource> {
       builder: (_) {
         return const MediaSourcePicker();
       },
-    ).then((value) async {
-      if (value != null && value is ImageSource) {
-        File? pickedFile = await PickImageUtility.instance(
-          applyEditor: true,
-          context: context,
-        ).pickedFile(value);
-        if (pickedFile != null) {
-          widget.chatListProvider.image = pickedFile;
-          var path = widget.chatListProvider.image.path;
-          widget.chatListProvider.photos.add(widget.chatListProvider.image);
-          Log.console(path);
-          if (context.mounted) {
-            Navigator.pop(context);
+    ).then(
+      (value) async {
+        if (value != null && value is ImageSource) {
+          File? pickedFile = await PickImageUtility.instance(
+            applyEditor: true,
+            context: context,
+          ).pickedFile(value);
+          if (pickedFile != null) {
+            widget.chatListProvider.image = pickedFile;
+            var path = widget.chatListProvider.image.path;
+            widget.chatListProvider.photos.add(widget.chatListProvider.image);
+            Log.console(path);
+            if (context.mounted) {
+              Navigator.pop(context);
+            }
           }
         }
-      }
-    });
+      },
+    );
   }
 
   @override
@@ -624,9 +626,7 @@ class _TypeSourceState extends State<TypeSource> {
                   padding: const EdgeInsets.all(8),
                   decoration: ShapeDecoration(
                     color: const Color(0xFFF3F3F3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: Image.asset(
                     uploadFileIc,
@@ -635,9 +635,7 @@ class _TypeSourceState extends State<TypeSource> {
                     color: yellowDark,
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
+                const SizedBox(width: 10),
                 Text(
                   "File",
                   style: TextStyle(

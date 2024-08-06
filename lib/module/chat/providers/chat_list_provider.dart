@@ -41,40 +41,53 @@ class ChatListProvider extends ChangeNotifier {
   bool isSelect = false;
   bool isVideo = false;
   var thumbPath;
-
+  bool isFilePickerActive = false;
   //VideoPlayerController? controller;
   void pickVideo(BuildContext context) async {
-    var result = await FilePicker.platform.pickFiles(
-      allowCompression: true,
-      allowMultiple: false,
-      dialogTitle: 'Select a Videos',
-      type: FileType.video,
-    );
-    if (result != null) {
-      var files = result.files;
-      var file = files[0];
-      int size = bytesToMB(file.size);
-      if (size > 20) {
-        if (context.mounted) {
-          errorToast(context, "Video size should be less then 20 mb");
+    if (isFilePickerActive) {
+      return; // Exit if the file picker is already active
+    }
+    isFilePickerActive = true;
+    try {
+      var result = await FilePicker.platform.pickFiles(
+        allowCompression: true,
+        allowMultiple: false,
+        dialogTitle: 'Select a Videos',
+        type: FileType.video,
+      );
+
+      if (result != null) {
+        var files = result.files;
+        var file = files[0];
+        int size = bytesToMB(file.size);
+
+        if (size > 20) {
+          if (context.mounted) {
+            errorToast(context, "Video size should be less then 20 mb");
+          }
+        } else {
+          videos.add(file);
+          video = File(file.path!);
+          isSelect = true;
+          isVideo = true;
+          // _initVideo();
+          // thumbPath = await _getImage(file.path!);
+          Log.console("Thumbnail path: $thumbPath");
+          notifyListeners();
         }
       } else {
-        videos.add(file);
-        video = File(file.path!);
-        isSelect = true;
-        isVideo = true;
-        // _initVideo();
-        // thumbPath = await _getImage(file.path!);
-        Log.console("Thumbnail path: $thumbPath");
-        notifyListeners();
+        if (context.mounted) {
+          errorToast(context, "Video not picked");
+        }
       }
-    } else {
+    } catch (e) {
       if (context.mounted) {
-        errorToast(context, "Video no pick");
+        errorToast(context, "Failed to pick video: $e");
       }
+    } finally {
+      isFilePickerActive = false; // Reset the flag
     }
   }
-
   /* Future<String?> _getImage(String videoUrl) async {
     //await Future.delayed(Duration(milliseconds: 500));
     final thumbnailPath = await VideoThumbnail.thumbnailFile(
@@ -237,17 +250,6 @@ class ChatListProvider extends ChangeNotifier {
     });
   }
 
-  void scrollSmooth() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(scrollController.position.minScrollExtent-200);
-      scrollController.animateTo(
-        scrollController.position.minScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
   Future<void> chatListGet(BuildContext context, bool isLoad) async {
     try {
       isLoading = isLoad;
@@ -297,6 +299,12 @@ class ChatListProvider extends ChangeNotifier {
         Log.console("totalPage$totalPage");
         Log.console("channelId$channelId");
         Log.console("eventId$eventId");
+        double scrollOffset = 0.0;
+        double maxScrollExtent = 0.0;
+        if (scrollController.hasClients) {
+          scrollOffset = scrollController.offset;
+          maxScrollExtent = scrollController.position.maxScrollExtent;
+        }
         if (isFast != null) {
           if (isFast) {
             messageList.clear();
@@ -304,8 +312,12 @@ class ChatListProvider extends ChangeNotifier {
             scrollToBottom();
             hasMore = true;
           } else {
-            messageList.insertAll(0, List<MessageListModel>.from(json["data"]["data"].map((i) => MessageListModel.fromJson(i))).toList(growable: true));
-            scrollSmooth();
+            List<MessageListModel> newMessages = List<MessageListModel>.from(json["data"]["data"].map((i) => MessageListModel.fromJson(i))).toList(growable: true);
+            messageList.insertAll(0, newMessages);
+            notifyListeners();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              scrollController.jumpTo(scrollOffset + scrollController.position.maxScrollExtent - maxScrollExtent);
+            });
           }
         }
       } else {

@@ -918,4 +918,42 @@ class ApiService {
     );
     return response;
   }
+
+  static Future<http.Response> googleLogin(String email, String googleId) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(ApiUrl.googleLogin, headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      "email": email,
+      "google_id": googleId,
+    });
+    response = http.Response(
+      jsonEncode(result),
+      200,
+      headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
+    );
+    return response;
+  }
+  static Future<http.Response> googleRegister(String email, String googleId,String name,String city,String state) async {
+    http.Response response;
+    var instance = await SharedPreferences.getInstance();
+    var token = instance.getString('currentToken');
+    var result = await ApiClient.postData(ApiUrl.googleRegister, headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      "email": email,
+      "google_id": googleId,
+      "name": name,
+      "city": city,
+      "state": state,
+    });
+    response = http.Response(
+      jsonEncode(result),
+      200,
+      headers: {HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'},
+    );
+    return response;
+  }
 }

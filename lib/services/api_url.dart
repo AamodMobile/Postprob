@@ -43,4 +43,7 @@ class ApiUrl {
   static const String readAllMessages = "${baseUrl}read-all-messages";
   static const String muteChat = "${baseUrl}mute-chat";
   static const String blockChat = "${baseUrl}block-chat";
+  static const String googleLogin = "${baseUrl}auth/google-login";
+  static const String googleRegister = "${baseUrl}auth/google-register";
+
 }

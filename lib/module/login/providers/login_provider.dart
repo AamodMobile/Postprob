@@ -82,6 +82,34 @@ class LoginProvider extends ChangeNotifier {
       }
     }
   }
+  Future<void> googleLoginApiCall(BuildContext context,String email,String googleId) async {
+    try {
+      showProgress(context);
+      var result = await ApiService.googleLogin(email, googleId);
+      var json = jsonDecode(result.body);
+      final apiResponse = UserModel.fromJson(json);
+      if (context.mounted) {
+        if (json["status"] == true) {
+          closeProgress(context);
+          var pref = await SharedPreferences.getInstance();
+          await pref.setString('currentUser', jsonEncode(apiResponse.toJson()));
+          await pref.setString('currentToken', apiResponse.accessToken.toString());
+          if (context.mounted) {
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const DashboardView(index: 0)), (route) => false);
+            successToast(context, json["message"]);
+          }
+        } else {
+          closeProgress(context);
+          errorToast(context, json["message"]);
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        closeProgress(context);
+        Log.console(e.toString());
+      }
+    }
+  }
 
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -90,7 +118,12 @@ class LoginProvider extends ChangeNotifier {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    Log.console(credential);
+    Log.console(credential.idToken.toString());
     return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+  Future<void> signOutGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+    Log.console("User Signed Out");
   }
 }

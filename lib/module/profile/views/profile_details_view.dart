@@ -210,7 +210,11 @@ class _ProfileDetailsViewState extends State<ProfileDetailsView> {
                                     ),
                                   ),
                                   SizedBox(width: 10.w),
-                                  Image.asset(editIc, height: 24.h, width: 24.w)
+                                  Image.asset(
+                                    editIc,
+                                    height: 24.h,
+                                    width: 24.w,
+                                  )
                                 ],
                               ),
                             ),

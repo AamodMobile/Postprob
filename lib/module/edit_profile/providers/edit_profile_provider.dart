@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:postprob/constants/constants.dart';
+import 'package:postprob/module/home/providers/home_provider.dart';
 import 'package:postprob/module/profile/providers/profile_provider.dart';
 import 'package:postprob/services/api_logs.dart';
 import 'package:postprob/services/api_service.dart';
@@ -65,6 +66,7 @@ class EditProfileProvider extends ChangeNotifier {
         if (json["status"] == true) {
           closeProgress(context);
           Provider.of<ProfileProvider>(context, listen: false).userGetProfile(context);
+          Provider.of<HomeProvider>(context, listen: false).userGetProfile(context);
           Navigator.pop(context);
           successToast(context, json["message"].toString());
         } else {

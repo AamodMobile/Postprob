@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart' as firebase_user;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:postprob/constants/constants.dart';
 import 'package:postprob/module/login/view/login_view.dart';
 import 'package:postprob/services/api_logs.dart';
@@ -12,6 +15,7 @@ class SettingProvider extends ChangeNotifier {
   TextEditingController confirmPassword = TextEditingController();
   int isNotification = 0;
   bool isHide = true;
+  firebase_user.User? user;
 
   void isShow(bool show) {
     isHide = show;
@@ -31,6 +35,7 @@ class SettingProvider extends ChangeNotifier {
       var json = jsonDecode(result.body);
       if (context.mounted) {
         if (json["status"] == true) {
+          signOutGoogle();
           closeProgress(context);
           SharedPreferences preferences = await SharedPreferences.getInstance();
           preferences.clear();
@@ -50,6 +55,16 @@ class SettingProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  Future<void> signOutGoogle() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+    await auth.signOut();
+    user = null;
+    notifyListeners();
+    Log.console("User Signed Out");
   }
 
   Future<void> changePassword(BuildContext context, String password, String newPassword, String confirmPassword) async {

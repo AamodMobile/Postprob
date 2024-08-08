@@ -185,7 +185,7 @@ class _LoginViewState extends State<LoginView> {
                         padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.03),
                         child: CustomButtonWidget(
                           onPressed: () {
-                            state.signInWithGoogle();
+                            state.signInWithGoogle(context);
                           },
                           text: "Sign in with Google",
                           style: CustomButtonStyle.style2,

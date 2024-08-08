@@ -919,7 +919,7 @@ class ApiService {
     return response;
   }
 
-  static Future<http.Response> googleLogin(String email, String googleId) async {
+  static Future<http.Response> googleLogin(String email, String googleId,String image) async {
     http.Response response;
     var instance = await SharedPreferences.getInstance();
     var token = instance.getString('currentToken');
@@ -928,6 +928,7 @@ class ApiService {
     }, body: {
       "email": email,
       "google_id": googleId,
+      "profile_image": image,
     });
     response = http.Response(
       jsonEncode(result),
@@ -936,7 +937,7 @@ class ApiService {
     );
     return response;
   }
-  static Future<http.Response> googleRegister(String email, String googleId,String name,String city,String state) async {
+  static Future<http.Response> googleRegister(String email, String googleId,String name,String city,String state,String image) async {
     http.Response response;
     var instance = await SharedPreferences.getInstance();
     var token = instance.getString('currentToken');
@@ -948,6 +949,7 @@ class ApiService {
       "name": name,
       "city": city,
       "state": state,
+      "profile_image": image,
     });
     response = http.Response(
       jsonEncode(result),

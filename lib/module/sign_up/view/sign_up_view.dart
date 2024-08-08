@@ -132,7 +132,7 @@ class _SignUpViewState extends State<SignUpView> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.020,
                       ),
-                     /* const Align(
+                      /* const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "City",
@@ -222,7 +222,7 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.020,
-                      ),*//* const Align(
+                      ),*/ /* const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "City",
@@ -379,7 +379,11 @@ class _SignUpViewState extends State<SignUpView> {
                         padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.03),
                         child: CustomButtonWidget(
                           onPressed: () {
-                            state.signInWithGoogle();
+                            if (state.city != "") {
+                              state.signInWithGoogle(context, state.city, state.state);
+                            } else {
+                              state.getCheckInStatus(context);
+                            }
                           },
                           text: "Sign up with Google",
                           style: CustomButtonStyle.style2,

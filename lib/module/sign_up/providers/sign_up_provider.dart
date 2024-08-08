@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart' as firebase_user;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -31,6 +32,8 @@ class SignUpProvider extends ChangeNotifier {
   var cityModel;
   var cityList = <CitiesModel>[];
   bool isHide = true;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   void reset() {
     password.clear();
@@ -132,10 +135,10 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> googleRegisterApiCall(BuildContext context, String name, String state, String city, String email, String googleId) async {
+  Future<void> googleRegisterApiCall(BuildContext context, String name, String city, String state, String email, String googleId, String image) async {
     try {
       showProgress(context);
-      var result = await ApiService.googleRegister(email, googleId, name, city, state);
+      var result = await ApiService.googleRegister(email, googleId, name, city, state, image);
       var json = jsonDecode(result.body);
       final apiResponse = UserModel.fromJson(json);
       if (context.mounted) {
@@ -208,15 +211,38 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    Log.console(credential);
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+  Future<firebase_user.User?> signInWithGoogle(BuildContext context, String city, String state) async {
+    try {
+      await auth.signOut();
+      await googleSignIn.signOut();
+      var pref = await SharedPreferences.getInstance();
+      await pref.clear();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        if (context.mounted) {
+          errorToast(context, "Not Found data");
+        }
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await auth.signInWithCredential(credential);
+      final firebase_user.User? user = userCredential.user;
+      if (user != null) {
+        if (context.mounted) {
+          await googleRegisterApiCall(context, user.displayName.toString(), city, state, user.email.toString(), user.uid.toString(), user.photoURL.toString());
+        }
+      }
+      return user;
+    } catch (e) {
+      Log.console(e.toString());
+      return null;
+    }
   }
 }
 
